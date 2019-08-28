@@ -1,0 +1,6 @@
+
+
+
+<p>RAM is expensive, and continuously running applications (as a typical server side application tends to do) consumes RAM, even when not serving requests. That's why DropServer only runs application code after getting a request. DropServer applications are designed to start quickly and can be terminated between requests.</p>
+
+<p>Furthermore serving static assets or some CRUD operations do not require running application code. The DropServer system itself, which is common to all applications, can take care of those requests.</p>
