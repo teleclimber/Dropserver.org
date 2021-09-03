@@ -1,47 +1,84 @@
 <!DOCTYPE html>
 <html>
     <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link href="dropserver.css" rel="stylesheet">
         <title>DropServer.org Web Application Platform</title>
     </head>
     <body>
-        <h1>DropServer</h1>
+        <h1 class="dropserver-logo big">
+            dr<span class="drop-o">o</span>p<span class="s">server</span>
+        </h1>
 
-        <h2>An Application Platform for Your Own Web-Based Services</h2>
+        <h2>An Application Platform for Your Personal Web Services</h2>
 
-        <h3>What is it?</h3>
-        <p>DropServer is an open source platform for hosting a multitude of small web-based applications.</p>
+        <p>DropServer is an open source server for hosting a multitude of small web-based applications.</p>
 
-        <p>Unlike typical application platforms that are designed to host one application for many users, DropServer is designed to host many different applications just for you.</p>
+        <p>With DropServer the goal is not to scale your application to many users, but to allow each user to run their own applications at a small scale. DropServer is designed to host multiple different applications just for you, your family, your club, or your small business.</p>
 
-        <p>Instead of being a developer tool, it is a user-centered system with the ability to install and use server-side applications from a graphical interface.</p>
+        <p>You can run your own DropServer instance for you and your friends, or (hopefully in the future) you will be able to sign up for a commercial host for a few dollars per month.</p>
 
-        <p>DropServer is a kindred spirit of the IndieWeb movement, which aims to give internet user the means to control their presence on the web. DropServer's goal is for users to control the code that runs on servers.</p>
+        <p>Once you have a DropServer, installing an application takes a few seconds and "just works". DropServer applications have single-sign-on, automatic data backups, and run safely in a sandbox.</p>
+
+        <p>At first there won't be many applications for DropServer, but a goal of the project is to make building one easy.</p>
+
+        <h2>Build For DropServer</h2>
+        
+        <p>If you are able to write some basic JS for webpages then you should be able to write a DropServer application.</p>
+
+        <p>A DropServer application consists of backend code written in JavaScript, and runs in <a href="https://deno.land">Deno</a>.</p>
+
+        <p>The frontend is entirely up to you. Use what you're familiar with because DropServer does not mandate any particular framework or dependency. You can even write a native app that communicates with a Dropserver app. Any client that can make HTTP requests can potentially communicate with a Dropserver app.</p>
+        
+        <p>The DropServer platform provides the following to all applications:</p>
+        
+        <ul>
+            <li>Single-Sign-On and user management</li>
+            <li>Private routes behind user authentication (API keys, secret links, etc... are roadmap features)</li>
+            <li>File storage and Sqlite database</li>
+            <li>Export and import and automatic backups of all application data</li>
+            <li>Data migration hooks</li>
+            <li>Subdomain or custom domain</li>
+            <li>Email sending (on the roadmap)</li>
+            <li>CDN serving of static assets (roadmap)</li>
+            <li>Quotas for resource usage (roadmap)</li>
+            <li>And much more as development progresses...</li>
+            
+        </ul>
+
+        <p>Writing a server-side service can be daunting. With so many of the hard bits provided by DropServer, a secure and useful backend for a personal app can be written in a few dozen lines of code.</p>
+        
+        <h2>Why?</h2>
+        <p>DropServer is a kindred spirit of the "indie web" and "small web" movements, which aims to give internet users the means to control their presence on the web. DropServer's goal is to give users control over the code they interact with in the cloud.</p>
         
         <h3>Your Own Cloud Applications</h3>
-        <p>Instead of signing up for services that eventually shutdown, degrade, or pivot away, set up a dropserver and install your own applications.</p>
+        <p>Instead of signing up for services that eventually shutdown, degrade, or pivot away, set up a DropServer and install your own applications.</p>
 
-        <p>With DropServer, installing an applictiaon takes a few clicks (zero command line necessary), and you can tell it to upgrade itself automatically or manually control when to upgrade.</p>
+        <p>With DropServer, installing an application takes a few clicks, and you can tell it to upgrade itself automatically or manually control when to upgrade.</p>
 
-        <h3>Convenient Cloud</h3>
-        <p>No need to create a new login for each application you install. DropServer gives you single-sign-on to all your installed applications.</p>
+        <h3>A Convenient Cloud</h3>
+        <p>There is no need to create a new login every time you use a new application. DropServer gives you single-sign-on to all your installed applications.</p>
 
-        <p>Even better: use the DropServer contacts list to invite others to your multi-user application. They too will be able to log in to your application using their existing DropServer account.</p>
+        <p>DropServer includes a "contact list" feature that makes it trivial to invite your friends and family to a multi-user app. They too will be able to log in to your application using their existing DropServer account, regardless of where it's hosted.</p>
 
         <h3>Sandboxed Cloud Applications</h3>
         <p>Each application runs in a sandbox that prevents it from reading files from disk or contacting any server on the internet by default. If it needs to do any such thing that permission must be explicitly granted by the user.</p>
 
-        <p>Read more about the security model of DropServer.</p>
+        <p>Read more about DropServer's <a href="security-model.html">security model</a>.</p>
 
-        <h3>Portable Cloud</h3>
-        <p>Pick up and move from one DropServer to another. Applications and associated data can be exported and moved to a new home, giving you the freedom to relocate whenever you feel like it.</p>
+        <h3>No Lock-In</h3>
+        <p>DropServer is open source so you will always be able to run it on your own hardware if you choose to.</p>
+        <p>In addition applications and associated data can be exported and moved to a new home, giving you the freedom to relocate to a new server whenever you feel like it.</p>
 
         <h3>Efficient Cloud</h3>
-        <p>How many apps do you have on your phone? How many do you use regularly? Dropserver is designed with that usage pattern in mind: users should be able to install many applications yet only the actively used ones should consume resources like RAM or CPU cycles.</p>
-
-        <p>My goal is that DropServer should be able to serve dozens of applications from a low power device like a Raspberry Pi.</p>
+        <p>How many apps do you have on your phone? How many do you use regularly? DropServer is designed with that usage pattern in mind: users should be able to install many applications yet only the actively used ones should consume resources like RAM or CPU cycles.</p>
         
-        <p>Read more about the application model.</p>
+        <p>Read more about the <a href="application-model.html">application model</a>.</p>
 
+        <footer>
+            &copy; <a href="olivierforget.net">Olivier Forget</a>
+        </footer>
 
     </body>
 </html>

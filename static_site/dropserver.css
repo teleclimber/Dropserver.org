@@ -1,0 +1,64 @@
+body {
+    --main-color: rgb(81, 93, 148);
+    --max-width: 900px;
+	margin: 0;
+	padding: 0;
+	background: rgb(248, 248, 248);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+    font-size: 1.3em;
+}
+
+h1, h2, h3, h4, p, ul, ol {
+    max-width: var(--max-width);
+    margin-left: auto;
+    margin-right: auto;
+    padding: 0 0.2rem;
+}
+ul, ol {
+    padding-left: 3em;
+}
+
+h1.dropserver-logo.big {
+    font-size:2.5em;
+}
+.dropserver-logo a {
+	text-decoration: none;
+	color: black;
+}
+.dropserver-logo .drop-o {
+	text-shadow:
+		0px -0.3em 0px hsl( 0, 0%, 70% ) ,
+		0px -0.6em 0px hsl( 0, 0%, 84% ) ,
+		0px -1.0em 0px hsl( 0, 0%, 92% ) ;
+}
+.dropserver-logo .s {
+	color: rgba(253,29,29,1);
+}
+@supports( background-clip: text ) {
+	.dropserver-logo .s {
+		background: linear-gradient(-90deg, rgb(57, 78, 172) 0%, rgb(235, 54, 54) 50%, rgba(252,176,69,1) 100%);	/*rgba(131,58,180,1)*/
+		background-clip: text;
+		color: transparent;
+	}
+}
+@supports( -webkit-background-clip: text ) {
+	.dropserver-logo .s {
+		background: linear-gradient(-90deg, rgb(57, 78, 172) 0%, rgb(235, 54, 54) 50%, rgba(252,176,69,1) 100%);	/*rgba(131,58,180,1)*/
+		-webkit-background-clip: text;
+		color: transparent;
+	}
+}
+
+footer {
+	margin: 1.5em 0 0 0;
+	padding: 1em;
+	background-color: #eee;
+	color: #888;
+	text-align: center;
+}
+footer a {
+	color: #555;
+}
+footer a:hover {
+	color: black;
+}
