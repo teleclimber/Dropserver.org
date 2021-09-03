@@ -4,7 +4,7 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link href="dropserver.css" rel="stylesheet">
-        <title>DropServer.org Web Application Platform</title>
+        <title>Dropserver.org Web Application Platform</title>
     </head>
     <body>
         <h1 class="dropserver-logo">
@@ -13,13 +13,13 @@
             </a>
         </h1>
 
-        <h2>DropServer Application Model</h2>
+        <h2>Dropserver Application Model</h2>
 
-        <p>DropServer is a fresh take on hosting applications for non-technical users. As such it is worth considering each aspect anew.</p>
+        <p>Dropserver is a fresh take on hosting applications for non-technical users. As such it is worth considering each aspect anew.</p>
 
         <h2>Goals</h2>
 
-        <p>DropServer's goal is to allow individuals to host their own personal web-based applications and services in a safe and convenient way. This means:</p>
+        <p>Dropserver's goal is to allow individuals to host their own personal web-based applications and services in a safe and convenient way. This means:</p>
 
         <ul>
         <li>Security and Privacy: Minimize the damage a malicious app can do by using the principle of least privilege. See <a href="security-model.html">security model</a> for details.</li>
@@ -30,7 +30,7 @@
 
         <li>Portability: Should they choose to move to a different host, or want to host under a different domain, an existing service should be transplantable with minimal fuss.</li>
 
-        <li>Stability: While DropServer will evolve over time and its APIs will change, old applications should continue to work on the latest DropServer.</li>
+        <li>Stability: While Dropserver will evolve over time and its APIs will change, old applications should continue to work on the latest Dropserver.</li>
 
         <li>Performance: Users may install many apps, but performance should be as good as possible on low power hardware. It also means responding quickly to requests to an appspace even if it is rarely used.</li>
         </ul>
@@ -57,7 +57,7 @@
             <li>A data directory</li>
         </ul>
 
-        <p>In DropServer this trio is called an Appspace.</p>
+        <p>In Dropserver this trio is called an Appspace.</p>
 
         <p>Beyond this there are a few concepts:</p>
 
@@ -110,9 +110,9 @@
         
         <h3>Appspace Users</h3>
 
-        <p>When a DropServer user creates an appspace, they are automatically added as a user of that appspace. For single-user apps, that's the end of the story. But cloud apps are more fun and useful when family, friends,  and collaborators are there too.</p>
+        <p>When a Dropserver user creates an appspace, they are automatically added as a user of that appspace. For single-user apps, that's the end of the story. But cloud apps are more fun and useful when family, friends,  and collaborators are there too.</p>
 
-        <p>Some apps can benefit from being more open to outsiders. Consider for example an appspace that provides commenting capabilities for a blog. In those cases, the appspace owner can make registration "open". This means that someone can add themselves to the appspace by submitting their DropServer URL and username and authenticating. (Roadmap feature, details TBD.)</p>
+        <p>Some apps can benefit from being more open to outsiders. Consider for example an appspace that provides commenting capabilities for a blog. In those cases, the appspace owner can make registration "open". This means that someone can add themselves to the appspace by submitting their Dropserver URL and username and authenticating. (Roadmap feature, details TBD.)</p>
 
         <p>The appspace owner can add a friend to the appspace using their email (roadmap), or using something called a DropID.</p>
         
@@ -122,7 +122,7 @@
 
         <h3>Application Routes</h3>
 
-        <p>Routes are created in app code, but unlike most JS server apps, these routes are not stored in the running application's memory. Instead they are written to a database on the DropServer host. This allows Dropserver to clear an appspace's runtime stack and shut down its sandbox when it is not used.</p>
+        <p>Routes are created in app code, but unlike most JS server apps, these routes are not stored in the running application's memory. Instead they are written to a database on the Dropserver host. This allows Dropserver to clear an appspace's runtime stack and shut down its sandbox when it is not used.</p>
 
         <p>Routes are declared by specifying the relevant http methods and the path, an authorization scheme (see below), and a route handler.</p>
 
@@ -132,7 +132,7 @@
             <li>Static serve: a static file server that can map to an appspace directory or an app directory.</li>
         </ul>
 
-        <p>DropServer can respond to static routes without starting the sandbox. This helps appspaces feel responsive and conserve resources.</p>
+        <p>Dropserver can respond to static routes without starting the sandbox. This helps appspaces feel responsive and conserve resources.</p>
 
         <p>There are two ways to create routes: by the app when it is installed, and dynamically during regular appspace use (the latter is a roadmap feature).</p>
         
@@ -145,7 +145,7 @@
             <li>Public: no authentication or authorization needed.</li>
         </ul>
 
-        <p>Users can authenticate using their own DropServer account, regardless of where it is hosted.</p>
+        <p>Users can authenticate using their own Dropserver account, regardless of where it is hosted.</p>
 
         <p>In addition, there is a concept of permissions: apps can specify permissions that can be required to access certain routes. It works like this:</p>
 
@@ -159,7 +159,7 @@
 
         <p>In addition to responding to http requests app functions can be called in a <a href="https://en.wikipedia.org/wiki/Cron">cron</a>-like fashion. (Roadmap feature.)</p>
 
-        <h3>DropServer API Version</h3>
+        <h3>Dropserver API Version</h3>
 
         <p>All touch points between Dropserver and external code and data (apps, appspace data, etc..) are considered part of the Dropserver API. This API is versioned. When future versions of DS are released with changing APIs, the version will be incremented.</p>
 
