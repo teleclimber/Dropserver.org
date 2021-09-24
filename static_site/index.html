@@ -19,7 +19,28 @@
 
         <p>You can run your own Dropserver instance for you and your friends, or (hopefully in the future) you will be able to sign up for a commercial host for a few dollars per month.</p>
 
-        <p>Once you have a Dropserver, installing an application takes a few seconds and "just works". Dropserver applications have single-sign-on, automatic data backups, and run safely in a sandbox.</p>
+        <p>Once you have a Dropserver, installing an application takes a few clicks and "just works".</p>
+
+        <h2>How Does it Work?</h2>
+
+        <p>Dropserver bakes in common features of most web services plus application management capabilities. This means all Dropserver applications have single-sign-on, user management, public and private routes, etc... In addition, each appspace has automatic data backups and migrations, application updates, resource monitoring, and more. For this to work, Dropserver applications must be written for Dropserver.</p>
+
+        <p>Dropserver provides a point-and-click interface where users can manage their appspaces, including choosing a subdomain or domain, deciding when apps should automatically upgrade (or not), how often to run backups, and adding or removing appspace users. This makes it possible for non-technical users to install and run their own apps.</p>
+
+        <p>A Dropserver application behaves much like a regular web service. It can serve static files or run code in response to requests, and each route can either be public or require authorization. Developers are in familiar territory, however they do not need to write any user authentication code. Read more in the <a href="application-model.html">application model page</a>.</p>
+
+        <p>From the user's point of view, a Dropserver appspace is similar to any website they might interact with. The main difference is that they authenticate ("log in") from within their own Dropserver account.</p>
+
+        <h2>What Kind of App Would You Build For Dropserver?</h2>
+
+        <p>Here are some ideas:</p>
+
+        <ul>
+            <li>Completely private single-user service, like a personal journal. This would have zero public routes and nobody but yourself would have access. However, unlike purely on-device native apps, your journal would be available on any device you're logged in to.</li>
+            <li>A family-oriented service, like a refrigerator minder for tracking leftovers. Give other members of the household access. There would be no public routes.</li>
+            <li>A static site editor and publishing service. The routes for creating content would be private, while the routes that serve the site itself would be public (or you could give access to the site to your friends only.)</li>
+            <li>Any application where there is one or a handful of users that interact with the same data may be a good fit.</li>
+        </ul>
 
         <p>At first there won't be many applications for Dropserver, but a goal of the project is to make building one easy.</p>
 

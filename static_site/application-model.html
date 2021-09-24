@@ -35,19 +35,19 @@
         <li>Performance: Users may install many apps, but performance should be as good as possible on low power hardware. It also means responding quickly to requests to an appspace even if it is rarely used.</li>
         </ul>
 
-        <h2>What is a "Cloud" Application?</h2>
+        <h2>What is a Dropserver "Appspace"?</h2>
 
         <p>We are all familiar with apps on our phones, and applications on our desktop based systems.</p>
 
         <p>In these systems, we typically use the OS's user interface to "launch" an application, or to bring it to the foreground, and then interact with the app using its UI.</p>
 
-        <p>But what does it mean to have an application in the "cloud"?</p>
+        <p>We are also familiar with typical web-based services, which work differently: the user navigates to the app's domain and logs in to interact with their data.</p>
 
-        <p>Web-based things are not usually "launched" by the user, instead they are "accessed". This implies that they have a location: an address ("URL") the user can enter into an address bar.</p>
+        <p>So how is a <i>personal</i> web-based application accessed?</p>
 
-        <p>Instead of installing an application that the user can start and use as needed, the user creates an address and specifies the app that runs there.</p>
+        <p>Since it is web-based, the implication is that has its own unique address on the web: a URL the user can enter into an address bar.</p>
 
-        <p>On the desktop a user typically chooses which files to edit in the application using the OS's file picker. This does not map well with the way web services typically work. Therefore an instance of an application will be tied to a data directory.</p>
+        <p>On the desktop a user typically chooses which files to edit in the application using the OS's file picker. This does not map well with the way web services typically work. Therefore an instance of an application is tied to a data directory.</p>
 
         <p>An application instance therefore specifies:</p>
 
@@ -57,7 +57,7 @@
             <li>A data directory</li>
         </ul>
 
-        <p>In Dropserver this trio is called an Appspace.</p>
+        <p>In Dropserver this trio is called an <b>Appspace</b>.</p>
 
         <p>Beyond this there are a few concepts:</p>
 
@@ -68,8 +68,10 @@
         <h3>Application Code</h3>
         <p>Each appspace is run by a single application at a given version.</p>
 
-        <p>Application code consists of one or more files, including JavaScript code that runs in response to inbound requests (see sandbox in security model), frontend code files, assets, data files, and anything else that is needed.</p>
+        <p>Application code consists of one or more files, including JavaScript code that runs in response to inbound requests (see sandbox in <a href="security-model.html">security model</a>), frontend code files, assets, data files, and anything else that is needed.</p>
         
+        <p>One application can be used to run multiple appspaces, however each appspace is completely independent.</p>
+
         <p>Applications can be uploaded from the users computer, or acquired via a URL (roadmap feature).</p>
 
         <h3>Appspace Data Directory</h3>
@@ -81,7 +83,6 @@
 
         <p>The size of the directory can be monitored and restricted (roadmap feature).</p>
 
-        
         <h3>Appspace Schema And Data Migrations</h3>
 
         <p>The application is responsible for the appspace's data directory structure, as well as the schema of the databases within it.</p>
@@ -102,7 +103,7 @@
 
         <h3>Appspace Availability</h3>
 
-        <p>To ensure consistent backups, Dropserver stops the appspace before performing a backup. "Stopping" an appspace means waiting for all http requests to finish, and for all connections to databases to close cleanly.New HTTP requests get a 503 response during this period. Once the backup is finished the appspace resumes normal operation.</p>
+        <p>To ensure consistent backups, Dropserver stops the appspace before performing a backup. "Stopping" an appspace means waiting for all http requests to finish, and for all connections to databases to close cleanly. New HTTP requests get a 503 response during this period. Once the backup is finished the appspace resumes normal operation.</p>
         
         <p>An appspace owner can also manually cause the appspace to become available by hitting the "Pause" button in the UI.</p>
 
