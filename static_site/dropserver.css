@@ -8,7 +8,7 @@ body {
     font-size: 1.3em;
 }
 
-h1, h2, h3, h4, p, ul, ol {
+header, article {
     max-width: var(--max-width);
     margin-left: auto;
     margin-right: auto;
@@ -17,9 +17,29 @@ h1, h2, h3, h4, p, ul, ol {
 ul, ol {
     padding-left: 3em;
 }
+p, li {
+	line-height: 1.4em;
+}
+
+header {
+	display: flex;
+	flex-direction: column;
+}
+@media (min-width: 500px) {
+	header {
+		flex-direction: row;
+		justify-content: space-between;
+		align-items: center;
+	}	
+}
 
 h1.dropserver-logo.big {
-    font-size:2.5em;
+    font-size:2em;
+}
+@media (min-width: 500px) {
+	h1.dropserver-logo.big {
+		font-size:2.5em;
+	}	
 }
 .dropserver-logo a {
 	text-decoration: none;

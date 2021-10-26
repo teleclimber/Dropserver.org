@@ -4,152 +4,156 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link href="dropserver.css" rel="stylesheet">
-        <title>Dropserver.org Web Application Platform</title>
+        <title>Dropserver.org Personal Web Application Platform</title>
     </head>
     <body>
-        <h1 class="dropserver-logo">
-            <a href="index.html">dr<span class="drop-o">o</span>p<span class="s">server</span></a>
-        </h1>
+        <header>
+            <h1 class="dropserver-logo">
+                <a href="index.html">dr<span class="drop-o">o</span>p<span class="s">server</span></a>
+            </h1>
+        </header>
 
-        <h2>Dropserver Security Model</h2>
+        <article>
+            <h2>Dropserver Security Model</h2>
 
-        <p>Dropserver is designed to give users of applications peace of mind. It should not be worrisome to install something from an unknown and therefore not trustable source.</p>
+            <p>Dropserver is designed to give users of applications peace of mind. It should not be worrisome to install something from an unknown and therefore not trustable source.</p>
 
-        <p>Furthermore if you run a Dropserver for your friends you should not have to worry about what they install and run on your instance.</p>
+            <p>Furthermore if you run a Dropserver for your friends you should not have to worry about what they install and run on your instance.</p>
 
-        <p>To achieve this peace of mind we must recognize the harm that untrusted code can do to a user of that application or to the instance and guard against these threats as best we can.</p>
+            <p>To achieve this peace of mind we must recognize the harm that untrusted code can do to a user of that application or to the instance and guard against these threats as best we can.</p>
 
-        <p>This is in addition to the "standard" threats that affect all web services.</p>
+            <p>This is in addition to the "standard" threats that affect all web services.</p>
 
-        <h3>Standard Threats</h3>
+            <h3>Standard Threats</h3>
 
-        <p>As applications accessible to the internet Dropserver Appspaces are subject to the full breadth of known and understood threats.</p>
+            <p>As applications accessible to the internet Dropserver Appspaces are subject to the full breadth of known and understood threats.</p>
 
-        <p>These are dealt with using well established mitigations:</p>
+            <p>These are dealt with using well established mitigations:</p>
 
-        <ul>
-            <li>safe by default and minimal configuration options for the user</li>
-            <li>https only</li>
-            <li>tight same origin policies and no CORS</li>
-            <li>Dropserver is solely responsible for setting and validating user authentication cookies, and applies strict policies like secure, http only, same-site, etc... as much as possible</li>
+            <ul>
+                <li>safe by default and minimal configuration options for the user</li>
+                <li>https only</li>
+                <li>tight same origin policies and no CORS</li>
+                <li>Dropserver is solely responsible for setting and validating user authentication cookies, and applies strict policies like secure, http only, same-site, etc... as much as possible</li>
+                
+            </ul>
+
+            <p>More generally, Dropserver handles as much of the stuff that can impact security (TLS, cookies, CORS, etc..) as it can. With some time and many eyeballs on the open source code Dropserver ought to be acceptably secure and any application that runs within it will benefit from that security.</p>
+
+            <h3>Threats Specific to Dropserver</h3>
+
+            <p>In addition to standard well-known threats Dropserver users may be subject to a number of additional threats because:</p>
+
+            <ul>
+                <li>Dropserver runs untrusted code</li>
+                <li>An administrator of a Dropserver instance may allow other users to operate on their instance</li>
+            </ul>
+
+            <p>A Dropserver might be under attack from the inside. A user may try to run code that will deliberately attack the instance, or an evil application unwittingly installed by a well-meaning user could be trying to break into the system.</p>
+
+            <p>Here are some improper things an evil application might try to do:</p>
+
+            <ul>
+                <li>Data exfiltration</li>
+                <li>Data destruction</li>
+                <li>Unwanted tracking</li>
+                <li>Abuse of computing resources</li>
+                <li>Serving as relay to attack other servers</li>
+            </ul>
+
+            <h3>Mitigations</h3>
+
+            <p>Dropserver assumes every Application is potentially hostile and anything the application is allowed to do will be used in a hostile manner.</p>
+
+            <p>To mitigate the threats a Dropserver application will be unable to do anything except create and manipulate data in a dedicated Appspace data directory. Anything else must be explicitly allowed by the Appspace's owner.</p>
+
+            <p>Here are the specific ways in which Applications are limited:</p>
+
+            <ul>
+                <li>No filesystem access, except for a data directory dedicated to that Appspace, and read-only access to application files. It is not possible to grant further filesystem access.</li>
+                <li>No outgoing network requests unless explicitly whitelisted by the user. This holds for the application on the server, and browser-side code.</li>
+                <li>No network listeners (aka servers). All incoming requests go through Dropserver host.</li>
+                <li>Computing resources are monitored and capped.</li>
+                <li>User login and session security ...? </li>
+            </ul>
+
+            <h3>Implementation</h3>
+
+            <p>Sandboxing the application code is of course the key to achieving these security goals.</p>
+
+            <p>Dropserver currently uses <a href="https://deno.land">Deno</a> as its application code sandbox to run untrusted code while controlling its interactions with the outside world.</p>
+
+            <p>Deno is a "Secure Runtime for JavaScript and Typescript". Unlike node which allows JS scripts access to a very large swath of calls to the underlying operating system, Deno stands in the way of each and every call to the OS. A Deno user can run untrusted code while limiting what that code can do.</p>
             
-        </ul>
+            <p>In addition to Deno, Dropserver leverages the underlying operating system's process monitoring and control system ("cgroups" in Linux) to restrict computing and storage resources (roadmap feature).</p>
 
-        <p>More generally, Dropserver handles as much of the stuff that can impact security (TLS, cookies, CORS, etc..) as it can. With some time and many eyeballs on the open source code Dropserver ought to be acceptably secure and any application that runs within it will benefit from that security.</p>
+            <p>Finally it is likely that in real-world use the sandbox is wrapped in another layer of security, likely a virtual machine such as Firecracker to limit the damage of a zero-day exploit. (roadmap feature)</p>
 
-        <h3>Threats Specific to Dropserver</h3>
+            <p>Regardless of how the code is sandboxed, the running application will be restricted in the following ways:</p>
 
-        <p>In addition to standard well-known threats Dropserver users may be subject to a number of additional threats because:</p>
+            <h4>Filesystem Access and Protection</h4>
 
-        <ul>
-            <li>Dropserver runs untrusted code</li>
-            <li>An administrator of a Dropserver instance may allow other users to operate on their instance</li>
-        </ul>
+            <p>For each Appspace file system access is strictly restricted to a few directories: read-only access to the application files and some metadata files, and read-write access to a dedicated data directory. No further filesystem permissions can be granted.</p>
+            
+            <p>An Appspace can not gain access to other Appspace data directories. An Appspace can only communicate with another Appspace via an http API, as any user would.</p>
 
-        <p>A Dropserver might be under attack from the inside. A user may try to run code that will deliberately attack the instance, or an evil application unwittingly installed by a well-meaning user could be trying to break into the system.</p>
+            <p>While an Application can technically destroy its own data, the consequences of this are limited. Each Appspace's data directory is regularly backed up and stored in a directory that the application can not access.</p>
 
-        <p>Here are some improper things an evil application might try to do:</p>
+            <h4>Outgoing Network Connections</h4>
 
-        <ul>
-            <li>Data exfiltration</li>
-            <li>Data destruction</li>
-            <li>Unwanted tracking</li>
-            <li>Abuse of computing resources</li>
-            <li>Serving as relay to attack other servers</li>
-        </ul>
+            <p>Appspaces must be granted the right to make network requests from the server. The calls are only allowed if the destination matches a whitelist.</p>
 
-        <h3>Mitigations</h3>
+            <p>At Appspace creation time the Application suggests a list of urls to whitelist, which the user can examine and alter. Additions to the whitelist at runtime are possible and require user approval (roadmap feature).</p>
 
-        <p>Dropserver assumes every Application is potentially hostile and anything the application is allowed to do will be used in a hostile manner.</p>
+            <p>Dropserver also attempts to protect users against unwanted outgoing network connections from the browser side. It does so by adding restrictive headers to HTTP responses (in particular a very strict CSP and no CORS). Most modern browsers respect these headers.</p>
 
-        <p>To mitigate the threats a Dropserver application will be unable to do anything except create and manipulate data in a dedicated Appspace data directory. Anything else must be explicitly allowed by the Appspace's owner.</p>
+            <h4>Network Listeners</h4>
 
-        <p>Here are the specific ways in which Applications are limited:</p>
+            <p>Applications are unable to create any kind of network listener. By the same token, it prevents applications from probing for open and used ports on the host.</p>
 
-        <ul>
-            <li>No filesystem access, except for a data directory dedicated to that Appspace, and read-only access to application files. It is not possible to grant further filesystem access.</li>
-            <li>No outgoing network requests unless explicitly whitelisted by the user. This holds for the application on the server, and browser-side code.</li>
-            <li>No network listeners (aka servers). All incoming requests go through Dropserver host.</li>
-            <li>Computing resources are monitored and capped.</li>
-            <li>User login and session security ...? </li>
-        </ul>
+            <p>Dropserver is the server that listens for incoming network requests. These are then forwarded to the right application as needed.</p>
 
-        <h3>Implementation</h3>
+            <h4>Computing resources</h4>
 
-        <p>Sandboxing the application code is of course the key to achieving these security goals.</p>
+            <p>Each Appspace runs its own Deno Process, which is attached to a cgroup that measures and limits its resource usage. This is a roadmap feature.</p>
 
-        <p>Dropserver currently uses <a href="https://deno.land">Deno</a> as its application code sandbox to run untrusted code while controlling its interactions with the outside world.</p>
+            <h3>Threats Mitigated</h3>
 
-        <p>Deno is a "Secure Runtime for JavaScript and Typescript". Unlike node which allows JS scripts access to a very large swath of calls to the underlying operating system, Deno stands in the way of each and every call to the OS. A Deno user can run untrusted code while limiting what that code can do.</p>
-        
-        <p>In addition to Deno, Dropserver leverages the underlying operating system's process monitoring and control system ("cgroups" in Linux) to restrict computing and storage resources (roadmap feature).</p>
+            <p>Let's look at our list of basic threats and see how the mitigations neutralize them:</p>
 
-        <p>Finally it is likely that in real-world use the sandbox is wrapped in another layer of security, likely a virtual machine such as Firecracker to limit the damage of a zero-day exploit. (roadmap feature)</p>
+            <h4>Data exfiltration</h4>
+            <ul>
+                <li>The app has zero access to data except for the data in the appspace directory and the data that comes in via requests. This limits the data it can exfiltrate.</li>
+                <li>The app could steal the appspace data that it does have access to, but it would have to send it somewhere. Here, the restrictions on making requests to other domains can help.</li>
+            </ul>
+            <h4>Data destruction</h4>
+            <ul>
+                <li>As above, access to data outside of appspaces controlled by the app is forbidden, so no risk there.</li>
+                <li>Should the app attempt to destroy its own data, or encrypt it in an attempt to extract a ransom, the automated regular backups that are performed entirely outside the control of the app can make such an attack a non-issue.</li>
+            </ul>
+            <h4>Unwanted tracking</h4>
+            <ul>
+                <li>Tracking depends on being able to send data to a remote host, so here again limiting the app's ability to make requests to other domains is helpful.</li>
+                <li>In particular a strong default Content Security Policy for all appspace pages neutralizes any attempt to ship data to another server from the frontend.</li>
+            </ul>
+            <h4>Abuse of computing resources</h4>
+            <ul>
+                <li>
+                    Appspaces are limited in how much disk space they can take up, and CPU and memory is limited by a cgroup (roadmap feature).
+                </li>
+                <li>
+                    In addition, the Dropserver user panel reveals resource usage for each of a user's appspaces, which should help identify apps that are not gentle with the user's resources. Roadmap features.
+                </li>
+            </ul>
+            <h4>Serving as relay to attack other servers</h4>
+            <ul>
+                <li>The restrictions on outbound requests should prevent this.</li>
+            </ul>
 
-        <p>Regardless of how the code is sandboxed, the running application will be restricted in the following ways:</p>
+            <h3>Status of Implementation</h3>
 
-        <h4>Filesystem Access and Protection</h4>
-
-        <p>For each Appspace file system access is strictly restricted to a few directories: read-only access to the application files and some metadata files, and read-write access to a dedicated data directory. No further filesystem permissions can be granted.</p>
-        
-        <p>An Appspace can not gain access to other Appspace data directories. An Appspace can only communicate with another Appspace via an http API, as any user would.</p>
-
-        <p>While an Application can technically destroy its own data, the consequences of this are limited. Each Appspace's data directory is regularly backed up and stored in a directory that the application can not access.</p>
-
-        <h4>Outgoing Network Connections</h4>
-
-        <p>Appspaces must be granted the right to make network requests from the server. The calls are only allowed if the destination matches a whitelist.</p>
-
-        <p>At Appspace creation time the Application suggests a list of urls to whitelist, which the user can examine and alter. Additions to the whitelist at runtime are possible and require user approval (roadmap feature).</p>
-
-        <p>Dropserver also attempts to protect users against unwanted outgoing network connections from the browser side. It does so by adding restrictive headers to HTTP responses (in particular a very strict CSP and no CORS). Most modern browsers respect these headers.</p>
-
-        <h4>Network Listeners</h4>
-
-        <p>Applications are unable to create any kind of network listener. By the same token, it prevents applications from probing for open and used ports on the host.</p>
-
-        <p>Dropserver is the server that listens for incoming network requests. These are then forwarded to the right application as needed.</p>
-
-        <h4>Computing resources</h4>
-
-        <p>Each Appspace runs its own Deno Process, which is attached to a cgroup that measures and limits its resource usage. This is a roadmap feature.</p>
-
-        <h3>Threats Mitigated</h3>
-
-        <p>Let's look at our list of basic threats and see how the mitigations neutralize them:</p>
-
-        <h4>Data exfiltration</h4>
-		<ul>
-			<li>The app has zero access to data except for the data in the appspace directory and the data that comes in via requests. This limits the data it can exfiltrate.</li>
-			<li>The app could steal the appspace data that it does have access to, but it would have to send it somewhere. Here, the restrictions on making requests to other domains can help.</li>
-		</ul>
-        <h4>Data destruction</h4>
-		<ul>
-			<li>As above, access to data outside of appspaces controlled by the app is forbidden, so no risk there.</li>
-			<li>Should the app attempt to destroy its own data, or encrypt it in an attempt to extract a ransom, the automated regular backups that are performed entirely outside the control of the app can make such an attack a non-issue.</li>
-		</ul>
-		<h4>Unwanted tracking</h4>
-		<ul>
-			<li>Tracking depends on being able to send data to a remote host, so here again limiting the app's ability to make requests to other domains is helpful.</li>
-			<li>In particular a strong default Content Security Policy for all appspace pages neutralizes any attempt to ship data to another server from the frontend.</li>
-		</ul>
-		<h4>Abuse of computing resources</h4>
-		<ul>
-			<li>
-				Appspaces are limited in how much disk space they can take up, and CPU and memory is limited by a cgroup (roadmap feature).
-			</li>
-			<li>
-				In addition, the Dropserver user panel reveals resource usage for each of a user's appspaces, which should help identify apps that are not gentle with the user's resources. Roadmap features.
-			</li>
-		</ul>
-        <h4>Serving as relay to attack other servers</h4>
-        <ul>
-			<li>The restrictions on outbound requests should prevent this.</li>
-        </ul>
-
-        <h3>Status of Implementation</h3>
-
-        <p>Only some of the ideas outlined here are implemented, and in many cases could be implemented better. It's mostly a matter of developer time, and eyeballs.</p>
+            <p>Only some of the ideas outlined here are implemented, and in many cases could be implemented better. It's mostly a matter of developer time, and eyeballs.</p>
+        </article>
 
         <footer>
             &copy; <a href="https://olivierforget.net">Olivier Forget</a>
