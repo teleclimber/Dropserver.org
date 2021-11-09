@@ -1,0 +1,42 @@
+---
+	import BaseLayout from './BaseLayout.astro';
+---
+<style>
+nav {
+	display: flex;
+	__flex-direction: row;
+}
+nav >a {
+	padding-right: 1rem;
+	white-space: nowrap;
+}
+@media (max-width: 500px) {
+	nav {
+		justify-content: space-between;
+	}
+	nav >a {
+	padding-right: 0;
+}
+}
+</style>
+
+<BaseLayout title="title">
+	<header>
+		<h1 class="dropserver-logo">
+			<a href="/">dr<span class="drop-o">o</span>p<span class="s">server</span></a>
+		</h1>
+		<span>
+			<a href="https://github.com/teleclimber/Dropserver">Github</a>
+		</span>
+	</header>
+
+	<nav>
+		<a href="/">Home</a>
+		<a href="/application-model/">Application Model</a>
+		<a href="/security-model/">Security Model</a>
+	</nav>
+
+	<article>
+		<slot />
+	</article>
+</BaseLayout>

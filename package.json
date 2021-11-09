@@ -1,0 +1,17 @@
+{
+  "name": "dropserver_org",
+  "version": "0.2.0",
+  "description": "Dropserver.org Website",
+  "main": "index.js",
+  "repository": "git@github.com:teleclimber/Dropserver.org.git",
+  "license": "MIT",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview"
+  },
+  "dependencies": {
+    "astro": "^0.20.12"
+  }
+}
