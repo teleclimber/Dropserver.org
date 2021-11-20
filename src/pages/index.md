@@ -9,21 +9,15 @@ Dropserver is an open source server for hosting a multitude of small web-based a
 
 With Dropserver the goal is not to scale your application to many users, but to allow each user to run their own applications at a small scale. Dropserver is designed to host multiple different applications just for you, your family, your club, or your small business.
 
+... here an image of showing 1 server per small group of people instead of megacorp thing...
+
 You can run your own Dropserver instance for you and your friends, or (hopefully in the future) you will be able to sign up for a commercial host for a few dollars per month.
 
 Once you have a Dropserver, installing an application takes a few clicks and "just works".
 
-## How Does it Work?
 
-Dropserver bakes in common features of most web services plus application management capabilities. This means all Dropserver applications have single-sign-on, user management, public and private routes, etc... In addition, each appspace has automatic data backups and migrations, application updates, resource monitoring, and more.
 
-Dropserver provides a point-and-click interface where users can manage their appspaces, including choosing a subdomain or domain, deciding when apps should automatically upgrade (or not), how often to run backups, and adding or removing appspace users. The goal is to make it possible for non-technical users to install and run their own apps.
-
-A Dropserver application behaves much like a regular web service. It can serve static files or run code in response to requests, and each route can either be public or require authorization. Developers are in familiar territory, however they do not need to write any user authentication code. Read more in the [application model page](/application-model/).
-
-From the user's point of view, a Dropserver appspace is similar to any website they might interact with. The main difference is that they authenticate ("log in") from within their own Dropserver account.
-
-## What Kind of App Would You Build For Dropserver?
+## What Kind of Apps Will Dropserver Run?
 
 Here are some ideas:
 
@@ -63,17 +57,21 @@ Dropserver is a kindred spirit of the "indie web" and "small web" movements, whi
 
 ### Your Own Cloud Applications
 
-Instead of signing up for services that eventually shutdown, degrade, or pivot away, set up a Dropserver and install your own applications.
+(house, snowglobe)
 
-With Dropserver, installing an application takes a few clicks, and you can tell it to upgrade itself automatically or manually control when to upgrade.
+Instead of signing up for services that eventually shutdown, degrade, or pivot away, set up a Dropserver and install your own applications.
 
 ### A Convenient Cloud
 
-There is no need to create a new login every time you use a new application. Dropserver gives you single-sign-on to all your installed applications.
+(skateboarding, holiday)
 
-Dropserver includes a "contact list" feature that makes it trivial to invite your friends and family to a multi-user app. They too will be able to log in to your application using their existing Dropserver account, regardless of where it's hosted.
+There is no need to create a new login every time you use a new application. Dropserver gives you single-sign-on to all your installed applications. Invite your friends into your app from the Contact List.
+
+(maybe make the friends thing its own bullet? It's really a big thing.)
 
 ### Sandboxed Cloud Applications
+
+(prison icon, or cop, or stop sign)
 
 Each application runs in a sandbox that prevents it from reading files from disk or contacting any server on the internet by default. If it needs to do any such thing that permission must be explicitly granted by the user.
 
@@ -81,11 +79,15 @@ Read more about Dropserver's [security model](/security-model/).
 
 ### No Lock-In
 
+(move-shit-around icon in icons8)
+
 Dropserver is open source so you will always be able to run it on your own hardware if you choose to.
 
 In addition applications and associated data can be exported and moved to a new home, giving you the freedom to relocate to a new server whenever you feel like it.
 
 ### Efficient Cloud
+
+(plant, some have multi prong which is a nice double-meaning)
 
 How many apps do you have on your phone? How many do you use regularly? Dropserver is designed with that usage pattern in mind: users should be able to install many applications yet only the actively used ones should consume resources like RAM or CPU cycles.
 
