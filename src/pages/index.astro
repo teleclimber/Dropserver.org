@@ -1,0 +1,51 @@
+---
+const title = "Dropserver";
+import HomeLayout from '../layouts/HomeLayout.astro';
+import { Markdown } from 'astro/components';
+import HomePointBox from '../layouts/HomePointBox.astro';
+---
+
+<style>
+	.points-grid {
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		grid-gap: 1rem;
+	}
+</style>
+
+<HomeLayout>
+	<Markdown>
+	## An Application Platform for Your Personal Web Services
+
+Dropserver is an open source server for hosting a multitude of small web-based applications.
+
+With Dropserver the goal is not to scale your application to many users, but to allow each user to run their own applications at a small scale. Dropserver is designed to host multiple different applications just for you, your family, your club, or your small business.
+
+... here an image of showing 1 server per small group of people instead of megacorp thing...
+
+You can run your own Dropserver instance for you and your friends, or (hopefully in the future) you will be able to sign up for a commercial host for a few dollars per month.
+
+Once you have a Dropserver, installing an application takes a few clicks and "just works".
+	</Markdown>
+
+	<div class="points-grid">
+		<HomePointBox 
+			image="/homepage/icons8-move-shit-around-96.png"
+			box_title="No Lock-In">
+			<Markdown>
+				Dropserver is open source so you will always be able to run it on your own hardware if you choose to.
+
+				Applications and associated data can be exported and moved to a new home, giving you the freedom to relocate to a new server whenever you feel like it.
+			</Markdown>
+		</HomePointBox>
+		<HomePointBox 
+			image="/homepage/icons8-grand-master-key-96.png"
+			box_title="Convenient Access">
+			<Markdown>
+				There is no need to create a new login every time you use a new application. Dropserver gives you single-sign-on to all your installed applications.
+				
+				You also get single sign on to the appspace s your friends have invited you to.
+			</Markdown>
+		</HomePointBox>
+	</div>
+</HomeLayout>
