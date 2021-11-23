@@ -1,5 +1,4 @@
 ---
-const title = "Dropserver";
 import HomeLayout from '../layouts/HomeLayout.astro';
 import { Markdown } from 'astro/components';
 import HomePointBox from '../layouts/HomePointBox.astro';
@@ -9,8 +8,24 @@ import HomePointBox from '../layouts/HomePointBox.astro';
 	.points-grid {
 		display: grid;
 		grid-template-columns: 1fr 1fr;
-		grid-gap: 1rem;
+		grid-gap: 3rem;
 	}
+	.why-head {
+		font-size: 3rem;
+		text-align: center;
+	}
+	.why-head .question-mark {
+	text-shadow:
+		0px -0.3em 0px hsl( 0, 0%, 70% ) ,
+		0px -0.6em 0px hsl( 0, 0%, 84% ) ,
+		0px -1.0em 0px hsl( 0, 0%, 92% ) ;
+	}
+	@media (max-width: 700px) {
+		.points-grid {
+			grid-template-columns: 1fr;
+		}
+	}
+
 </style>
 
 <HomeLayout>
@@ -28,7 +43,50 @@ You can run your own Dropserver instance for you and your friends, or (hopefully
 Once you have a Dropserver, installing an application takes a few clicks and "just works".
 	</Markdown>
 
+	<!--
+		Talk about privacy in a point?, Maybe in first one?
+		Talk in such a way that non-tech users don't feel unwelcome ("servers", hardware, are bad?)
+
+	-->
+
+	<h2 class="why-head">Why<span class="question-mark">?</span></h2>
+
+	<p>
+		Dropserver is a kindred spirit of the "indie web" and "small web" movements, which aims to give internet users the means to control their presence on the web. Dropserver's goal is to give users control over the code they interact with in the cloud.</p>
+
 	<div class="points-grid">
+		<HomePointBox 
+			image="/homepage/icons8-snowglobe-64.png"
+			box_title='Your Own "Cloud" Applications'>
+			<Markdown>
+				Instead of signing up for services that eventually shutdown, degrade, or pivot away, set up a Dropserver and install your own applications.
+			</Markdown>
+		</HomePointBox>
+		<HomePointBox 
+			image="/homepage/icons8-tango-96.png"
+			box_title='For Your Friends Too'>
+			<Markdown>
+				Invite friends to your appspaces so you can collaborate, share, and be social. Dropserver Applications can work with just two users, or dozens and hundreds.
+			</Markdown>
+		</HomePointBox>
+		<HomePointBox 
+			image="/homepage/icons8-grand-master-key-96.png"
+			box_title="Convenient Access">
+			<Markdown>
+				There is no need to create a new login every time you use a new application. Dropserver gives you single-sign-on to all your installed applications.
+				
+				You also get one-click access to the appspaces your friends have invited you to.
+			</Markdown>
+		</HomePointBox>
+		<HomePointBox 
+			image="/homepage/icons8-prison-64.png"
+			box_title="Sandboxed Applications">
+			<Markdown>
+				For your privacy and security each application runs in a sandbox that prevents it from reading files from disk or contacting any server on the internet. If it needs to do any such thing that permission must be explicitly granted by the user.
+
+				Read more about Dropserver's [security model](/security-model/).
+			</Markdown>
+		</HomePointBox>
 		<HomePointBox 
 			image="/homepage/icons8-move-shit-around-96.png"
 			box_title="No Lock-In">
@@ -39,12 +97,12 @@ Once you have a Dropserver, installing an application takes a few clicks and "ju
 			</Markdown>
 		</HomePointBox>
 		<HomePointBox 
-			image="/homepage/icons8-grand-master-key-96.png"
-			box_title="Convenient Access">
+			image="/homepage/icons8-plant-64.png"
+			box_title="An Efficient Cloud">
 			<Markdown>
-				There is no need to create a new login every time you use a new application. Dropserver gives you single-sign-on to all your installed applications.
-				
-				You also get single sign on to the appspace s your friends have invited you to.
+				How many apps do you have on your phone? How many do you use regularly? Dropserver is designed with that usage pattern in mind: users should be able to install many applications yet only the actively used ones should consume resources like RAM or CPU cycles.
+
+				Read more about the [application model](/application-model/).
 			</Markdown>
 		</HomePointBox>
 	</div>

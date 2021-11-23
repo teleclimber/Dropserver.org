@@ -1,9 +1,39 @@
 ---
 const {image, box_title } = Astro.props;
 ---
-
+<style>
+.img-container {
+	display: flex;
+	align-items: center;
+}
+img {
+	width: 64px;
+	height: 64px;
+}
+h3 {
+	margin-left: 1rem;
+	flex-grow: 2;
+	position:relative;
+}
+h3::after {
+	position: absolute;
+	bottom: -0.3rem;
+	left: 0;
+	width: 97%;
+	height: 5px;
+	content: " ";
+	background: linear-gradient(-90deg, rgb(57, 78, 172) 0%, rgb(235, 54, 54) 50%, rgba(252,176,69,1) 100%);	
+	opacity: 0.6;
+}
+.container {
+	border: 1px solid #999;
+	padding: 10px;
+}
+</style>
 <div>
-	<img src={image}>
-	<h3>{box_title}</h3>
+	<div class="img-container">
+		<img src={image}>
+		<h3>{box_title}</h3>
+	</div>
 	<slot></slot>
 </div>
