@@ -10,12 +10,12 @@ import HomePointBox from '../layouts/HomePointBox.astro';
 		grid-template-columns: 1fr 1fr;
 		grid-gap: 3rem;
 	}
-	.why-head {
+	h2 {
 		font-size: 3rem;
 		text-align: center;
 	}
-	.why-head .question-mark {
-	text-shadow:
+	.drop-ghosts {
+		text-shadow:
 		0px -0.3em 0px hsl( 0, 0%, 70% ) ,
 		0px -0.6em 0px hsl( 0, 0%, 84% ) ,
 		0px -1.0em 0px hsl( 0, 0%, 92% ) ;
@@ -24,6 +24,30 @@ import HomePointBox from '../layouts/HomePointBox.astro';
 		.points-grid {
 			grid-template-columns: 1fr;
 		}
+	}
+
+	.project-status .status-head {
+		display: flex;
+		align-items:baseline;
+	}
+	.project-status .status-head hr {
+		flex-grow: 2;
+		margin-left: 1rem;
+	}
+	.project-status hr {
+		--yellow: #ffff51;
+		background-image: repeating-linear-gradient(-45deg, 
+		black 0, black 20px, var(--yellow) 20px, var(--yellow) 40px);
+		height: 5px;
+		border: none;
+		opacity: 0.7;
+	}
+	.project-status h3 {
+		margin-bottom: 0;
+	}
+	.project-status .inner {
+		background: rgba(255, 255, 255, 1);
+		padding: 5px;
 	}
 
 </style>
@@ -36,8 +60,6 @@ Dropserver is an open source server for hosting a multitude of small web-based a
 
 With Dropserver the goal is not to scale your application to many users, but to allow each user to run their own applications at a small scale. Dropserver is designed to host multiple different applications just for you, your family, your club, or your small business.
 
-... here an image of showing 1 server per small group of people instead of megacorp thing...
-
 You can run your own Dropserver instance for you and your friends, or (hopefully in the future) you will be able to sign up for a commercial host for a few dollars per month.
 
 Once you have a Dropserver, installing an application takes a few clicks and "just works".
@@ -49,7 +71,7 @@ Once you have a Dropserver, installing an application takes a few clicks and "ju
 
 	-->
 
-	<h2 class="why-head">Why<span class="question-mark">?</span></h2>
+	<h2>Why<span class="drop-ghosts">?</span></h2>
 
 	<p>
 		Dropserver is a kindred spirit of the "indie web" and "small web" movements, which aims to give internet users the means to control their presence on the web. Dropserver's goal is to give users control over the code they interact with in the cloud.</p>
@@ -57,7 +79,7 @@ Once you have a Dropserver, installing an application takes a few clicks and "ju
 	<div class="points-grid">
 		<HomePointBox 
 			image="/homepage/icons8-snowglobe-64.png"
-			box_title='Your Own "Cloud" Applications'>
+			box_title='Your Own Web'>
 			<Markdown>
 				Instead of signing up for services that eventually shutdown, degrade, or pivot away, set up a Dropserver and install your own applications.
 			</Markdown>
@@ -66,34 +88,34 @@ Once you have a Dropserver, installing an application takes a few clicks and "ju
 			image="/homepage/icons8-tango-96.png"
 			box_title='For Your Friends Too'>
 			<Markdown>
-				Invite friends to your appspaces so you can collaborate, share, and be social. Dropserver Applications can work with just two users, or dozens and hundreds.
+				Invite friends to your appspaces so you can collaborate, share, and be social. Dropserver applications can work with just two users, a dozen, or even hundreds.
 			</Markdown>
 		</HomePointBox>
 		<HomePointBox 
 			image="/homepage/icons8-grand-master-key-96.png"
 			box_title="Convenient Access">
 			<Markdown>
-				There is no need to create a new login every time you use a new application. Dropserver gives you single-sign-on to all your installed applications.
+				There is no need to create a new account every time you use a new application or service. Dropserver gives you direct access to all your installed applications.
 				
 				You also get one-click access to the appspaces your friends have invited you to.
 			</Markdown>
 		</HomePointBox>
 		<HomePointBox 
 			image="/homepage/icons8-prison-64.png"
-			box_title="Sandboxed Applications">
+			box_title="Sandboxed For Security">
 			<Markdown>
 				For your privacy and security each application runs in a sandbox that prevents it from reading files from disk or contacting any server on the internet. If it needs to do any such thing that permission must be explicitly granted by the user.
 
-				Read more about Dropserver's [security model](/security-model/).
+				Read more about Dropserver's [security model](/docs/security-model).
 			</Markdown>
 		</HomePointBox>
 		<HomePointBox 
 			image="/homepage/icons8-move-shit-around-96.png"
-			box_title="No Lock-In">
+			box_title="Freedom To Move">
 			<Markdown>
-				Dropserver is open source so you will always be able to run it on your own hardware if you choose to.
-
 				Applications and associated data can be exported and moved to a new home, giving you the freedom to relocate to a new server whenever you feel like it.
+
+				Dropserver is open source so you will always be able to run it on your own hardware if you choose to.
 			</Markdown>
 		</HomePointBox>
 		<HomePointBox 
@@ -102,8 +124,38 @@ Once you have a Dropserver, installing an application takes a few clicks and "ju
 			<Markdown>
 				How many apps do you have on your phone? How many do you use regularly? Dropserver is designed with that usage pattern in mind: users should be able to install many applications yet only the actively used ones should consume resources like RAM or CPU cycles.
 
-				Read more about the [application model](/application-model/).
+				Read more about the [application model](/docs/application-model).
 			</Markdown>
 		</HomePointBox>
 	</div>
+
+	<div class="project-status">
+		<div class="status-head">
+			<h3>Project Status:</h3>
+			<hr>
+		</div>
+		<Markdown>
+			Dropserver is under active development, but it is nowhere near ready for general use. Some of what you read above is aspirational.
+			
+			Having said that a good chunk of functionality is in place and Dropserver is already proving valuable and fun (to its developer at least).
+
+			If you are a developer who wants to experiment with a self-hosted server please have a look at the [repo](https://github.com/teleclimber/Dropserver) to get started.
+		</Markdown>
+		<hr>
+	</div>
+
+	<h2>Apps<span class="drop-ghosts">?</span></h2>
+	<Markdown>
+		For now there are no apps, but a goal of Dropserver is to make it very easy to create the backend for a simple application.
+
+		Dropserver provides user management, authentication, file storage and serving of static assets, TLS, data migration hooks, and more... so that building a backend for a simple web service is as easy as possible.
+
+		With that, here are some ideas of what you might build for Dropserver:
+
+		*   Completely private single-user service, like a personal journal. This would have zero public routes and nobody but yourself would have access. However, unlike purely on-device native apps, your journal would be available on any device you're logged in to.
+		*   A family-oriented service, like a refrigerator minder for tracking leftovers. Give other members of the household access. There would be no public routes.
+		*   A static site editor and publishing service. The routes for creating content would be private, while the routes that serve the site itself would be public (or you could give access to the site to your friends only.)
+		*   An internal tool for work or a club.
+		*   Any application where there is one or a handful of users that interact with the same data may be a good fit.
+	</Markdown>
 </HomeLayout>

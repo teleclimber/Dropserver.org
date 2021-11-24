@@ -1,14 +1,16 @@
 ---
 title: Dropserver Documentation
-layout: ../../layouts/PageLayout.astro
+layout: ../../layouts/DocsLayout.astro
 ---
 
-# Docs
+# Dropserver Docs
+
+Docs are very sparse and a work in progress right now.
 
 - How Does Dropserver Work?
   - [basics](basics)
-  - application model
-  - security model
+  - [application model](application-model)
+  - [security model](security-model)
   - users and logins
   - ...
 - Dropserver Admin Guide

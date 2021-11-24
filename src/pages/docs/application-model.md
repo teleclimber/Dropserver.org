@@ -1,6 +1,6 @@
 ---
 title: Dropserver Application Model
-layout: ../layouts/PageLayout.astro
+layout: ../../layouts/DocsPageLayout.astro
 ---
 
 # Dropserver Application Model

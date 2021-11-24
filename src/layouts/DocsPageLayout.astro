@@ -1,0 +1,40 @@
+---
+	import BaseLayout from './BaseLayout.astro';
+---
+<style>
+nav {
+	
+}
+nav > svg {
+	width: 1.3rem;
+	height: 1.3rem;
+	vertical-align: text-bottom;
+}
+nav > a {
+	padding-right: 1rem;
+	white-space: nowrap;
+}
+
+</style>
+
+<BaseLayout title="title">
+	<header>
+		<h1 class="dropserver-logo">
+			<a href="/">dr<span class="drop-o">o</span>p<span class="s">server</span></a>
+		</h1>
+		<span>
+			<a href="https://github.com/teleclimber/Dropserver">Github</a>
+		</span>
+	</header>
+
+	<nav>
+		<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+			<path fill-rule="evenodd" d="M15.707 15.707a1 1 0 01-1.414 0l-5-5a1 1 0 010-1.414l5-5a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 010 1.414zm-6 0a1 1 0 01-1.414 0l-5-5a1 1 0 010-1.414l5-5a1 1 0 011.414 1.414L5.414 10l4.293 4.293a1 1 0 010 1.414z" clip-rule="evenodd" />
+		</svg>
+		 Back to <a href="/docs/">documentation</a>
+	</nav>
+
+	<article>
+		<slot />
+	</article>
+</BaseLayout>

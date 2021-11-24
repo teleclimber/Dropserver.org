@@ -1,6 +1,6 @@
 ---
 title: Dropserver Security Model
-layout: ../layouts/PageLayout.astro
+layout: ../../layouts/DocsPageLayout.astro
 ---
 
 # Dropserver Security Model
