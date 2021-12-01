@@ -19,7 +19,7 @@ header, article, nav {
     padding: 0 0.5rem;
 }
 ul, ol {
-    padding-left: 3em;
+    padding-left: 2em;
 }
 p, li {
 	line-height: 1.4em;
@@ -80,6 +80,9 @@ footer {
 	color: #888;
 	text-align: center;
 }
+footer .copy {
+	margin: 1.5em;
+}
 footer a {
 	color: #555;
 }
@@ -108,7 +111,10 @@ footer a:hover {
 		<slot />
 
         <footer>
-            &copy; <a href="https://olivierforget.net">Olivier Forget</a>
+			<slot name="footer" />
+			<div class="copy">
+            	&copy; <a href="https://olivierforget.net">Olivier Forget</a>
+			</div>
         </footer>
     </body>
 </html>

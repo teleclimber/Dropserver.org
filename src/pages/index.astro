@@ -12,6 +12,7 @@ import HomePointBox from '../layouts/HomePointBox.astro';
 	}
 	h2 {
 		font-size: 3rem;
+		margin-top: 6rem;
 		text-align: center;
 	}
 	.drop-ghosts {
@@ -25,31 +26,61 @@ import HomePointBox from '../layouts/HomePointBox.astro';
 			grid-template-columns: 1fr;
 		}
 	}
-
-	.project-status .status-head {
-		display: flex;
-		align-items:baseline;
-	}
-	.project-status .status-head hr {
-		flex-grow: 2;
-		margin-left: 1rem;
-	}
-	.project-status hr {
+	.project-status {
 		--yellow: #ffff51;
 		background-image: repeating-linear-gradient(-45deg, 
 		black 0, black 20px, var(--yellow) 20px, var(--yellow) 40px);
-		height: 5px;
-		border: none;
-		opacity: 0.7;
+		padding: 5px;
+		border-radius: 30px;
+		margin: 3rem 0;
+	}
+	.project-status > div {
+		background-color: rgba(255, 255, 245, 0.98);
+		padding: 1em;
+		border-radius: 25px;
 	}
 	.project-status h3 {
-		margin-bottom: 0;
+		margin: 0;
 	}
-	.project-status .inner {
-		background: rgba(255, 255, 255, 1);
-		padding: 5px;
+	.project-status ul {
+		margin-left: 1em;
 	}
 
+	dl.drop-by {
+		display: grid;
+		grid-template-columns: auto auto;
+		gap: 0.5em 0.3em;
+		margin-bottom: 2.5em;
+	}
+	dl.drop-by dt {
+		text-align: right;
+		font-weight: bold;
+	}
+	dl.drop-by dd {
+		margin:0;
+	}
+	@media (max-width: 500px) {
+		dl.drop-by {
+			grid-template-columns: auto;
+			gap:0 0;
+		}
+		dl.drop-by dt {
+			text-align:left;
+		}
+		dl.drop-by dd {
+			margin: 0.2em 0 0.5em 1em;
+		}
+	}
+	.icons {
+		font-size: 1rem;
+		color: #aaa;
+		text-align: center;
+	}
+	.icons a {
+		color: #6767b3;
+		display: inline-block;
+		margin: 0 0.2em;
+	}
 </style>
 
 <HomeLayout>
@@ -88,7 +119,7 @@ Once you have a Dropserver, installing an application takes a few clicks and "ju
 			image="/homepage/icons8-tango-96.png"
 			box_title='For Your Friends Too'>
 			<Markdown>
-				Invite friends to your appspaces so you can collaborate, share, and be social. Dropserver applications can work with just two users, a dozen, or even hundreds.
+				Invite friends to your appspaces so you can collaborate, share, and have a laugh. Dropserver applications can work with just two users, a dozen, or even hundreds.
 			</Markdown>
 		</HomePointBox>
 		<HomePointBox 
@@ -130,32 +161,53 @@ Once you have a Dropserver, installing an application takes a few clicks and "ju
 	</div>
 
 	<div class="project-status">
-		<div class="status-head">
+		<div>
 			<h3>Project Status:</h3>
-			<hr>
+			<Markdown>
+				* Dropserver is under active development, but it is nowhere near ready for general use. Some of what you read above is aspirational.
+				* A good chunk of functionality is in place and Dropserver is already proving valuable and fun (to its developer at least).
+				* If you are a developer who wants to experiment with a self-hosted server please have a look at the [repo](https://github.com/teleclimber/Dropserver) to get started.
+			</Markdown>
 		</div>
-		<Markdown>
-			Dropserver is under active development, but it is nowhere near ready for general use. Some of what you read above is aspirational.
-			
-			Having said that a good chunk of functionality is in place and Dropserver is already proving valuable and fun (to its developer at least).
-
-			If you are a developer who wants to experiment with a self-hosted server please have a look at the [repo](https://github.com/teleclimber/Dropserver) to get started.
-		</Markdown>
-		<hr>
 	</div>
 
 	<h2>Apps<span class="drop-ghosts">?</span></h2>
 	<Markdown>
-		For now there are no apps, but a goal of Dropserver is to make it very easy to create the backend for a simple application.
+		For now there are no apps (OK, there is [one](https://github.com/teleclimber/Leftovers)), but a goal of Dropserver is to make it very easy to create the backend for a simple application.
 
 		Dropserver provides user management, authentication, file storage and serving of static assets, TLS, data migration hooks, and more... so that building a backend for a simple web service is as easy as possible.
 
 		With that, here are some ideas of what you might build for Dropserver:
 
 		*   Completely private single-user service, like a personal journal. This would have zero public routes and nobody but yourself would have access. However, unlike purely on-device native apps, your journal would be available on any device you're logged in to.
-		*   A family-oriented service, like a refrigerator minder for tracking leftovers. Give other members of the household access. There would be no public routes.
-		*   A static site editor and publishing service. The routes for creating content would be private, while the routes that serve the site itself would be public (or you could give access to the site to your friends only.)
+		*   A family-oriented service, like a refrigerator minder for tracking leftovers. Give other members of the household access. This app exists, see [here](https://github.com/teleclimber/Leftovers).
+		*   A static site editor and publishing service. The routes for creating content would be private, while the routes that serve the site itself would be public and served statically.
 		*   An internal tool for work or a club.
-		*   Any application where there is one or a handful of users that interact with the same data may be a good fit.
+
+		Generally speaking, any application where there is one or a handful of users that interact with the same data may be a good fit.
 	</Markdown>
+
+	<h2>Dr<span class="drop-ghosts">o</span>p By...</h2>
+	<dl class="drop-by">
+		<dt>Documentation:</dt>
+		<dd><a href="/docs/">Dropserver.org/docs/</a></dd>
+		<dt>Project Github:</dt>
+		<dd><a href="https://github.com/teleclimber/Dropserver">GitHub.com/teleclimber/Dropserver</a></dd>
+		<dt>Developer Twitter:</dt>
+		<dd><a href="https://twitter.com/teleclimber">@teleclimber</a></dd>
+		<dt>Developer Mastodon:</dt>
+		<dd><a href="https://social.tchncs.de/@teleclimber">@teleclimber@social.tchncs.de</a></dd>
+		<dt>Developer Blog:</dt>
+		<dd><a href="https://olivierforget.net/blog/">OlivierForget.net/blog/</a></dd>
+	</dl>
+
+	<div slot="footer" class="icons">
+		icons from icons8:
+		<a href="https://icons8.com/icon/n2he8oY9Cbd6/snowglobe">Snowglobe</a>
+		<a href="https://icons8.com/icon/Tjwlr5jzNNDv/tango">Tango</a>
+		<a href="https://icons8.com/icon/vmVgag82bIJu/grand-master-key">Master Key</a>
+		<a href="https://icons8.com/icon/2UnfVDe9zedb/prison">Prison</a>
+		<a href="https://icons8.com/icon/vOZ4nkzJjLU0/move-shit-around">Move</a>
+		<a href="https://icons8.com/icon/4py6PAwzQRgo/plant">Plant</a>
+	</div>
 </HomeLayout>
