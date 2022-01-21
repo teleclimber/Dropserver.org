@@ -11,12 +11,12 @@ Dropserver is a fresh take on hosting applications for non-technical users. As s
 
 Dropserver's goal is to allow individuals to host their own personal web-based applications and services in a safe and convenient way. This means:
 
-*   Security and Privacy: Minimize the damage a malicious app can do by using the principle of least privilege. See [security model](/security-model/) for details.
-*   Convenience: Users should be able to "install" apps in a few clicks, and not be burdened with maintenance tasks.
-*   Simplicity: Assume users are not experts. Minimize configuration options and favor making safe decisions for them.
-*   Portability: Should they choose to move to a different host, or want to host under a different domain, an existing service should be transplantable with minimal fuss.
-*   Stability: While Dropserver will evolve over time and its APIs will change, old applications should continue to work on the latest Dropserver.
-*   Performance: Users may install many apps, but performance should be as good as possible on low power hardware. It also means responding quickly to requests to an appspace even if it is rarely used.
+*   **Security and Privacy:** Minimize the damage a malicious app can do by using the principle of least privilege. See [security model](/security-model/) for details.
+*   **Convenience:** Users should be able to "install" apps in a few clicks, and not be burdened with maintenance tasks.
+*   **Simplicity:** Assume users are not experts. Minimize configuration options and favor making safe decisions for them.
+*   **Portability:** Should they choose to move to a different host, or want to host under a different domain, an existing service should be transplantable with minimal fuss.
+*   **Stability:** While Dropserver will evolve over time and its APIs will change, old applications should continue to work on the latest Dropserver.
+*   **Performance:** Users may install many apps, but performance should be as good as possible on low power hardware. It also means responding quickly to requests to an appspace even if it is rarely used.
 
 ## What is a Dropserver "Appspace"?
 
@@ -40,7 +40,7 @@ An application instance therefore specifies:
 
 In Dropserver this trio is called an **Appspace**.
 
-Beyond this there are a few concepts:
+Let's go over these concepts and more:
 
 ### Appspace Address
 
@@ -90,9 +90,17 @@ Finally it's also possible to run an exported appspace locally on a desktop. Thi
 
 To ensure consistent backups, Dropserver stops the appspace before performing a backup. "Stopping" an appspace means waiting for all http requests to finish, and for all connections to databases to close cleanly. New HTTP requests get a 503 response during this period. Once the backup is finished the appspace resumes normal operation.
 
-An appspace owner can also manually cause the appspace to become available by hitting the "Pause" button in the UI.
+An appspace owner can also manually cause the appspace to become unavailable by hitting the "Pause" button in the UI.
 
 Furthermore, Dropserver will make an appspace unavailable if it detects an anomaly in the appspace (such as the wrong data schema). These measures are intended to forestall data corruption.
+
+### Application Code is Stoppable
+
+Application code is written so that the sandbox can be stopped. This frees up resources for other applications.
+
+Long running code like server listeners are taken care of by Dropserver as much as possible. An App's design is similar to a "serverless" app: functions that respond to certain requests.
+
+Dropserver can also handle some routes itself, without waking the sandbox: in particular it can serve static assets. (See route types below.)
 
 ### Appspace Users
 
