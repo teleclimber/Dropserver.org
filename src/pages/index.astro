@@ -11,6 +11,15 @@ import HomePointBox from '../layouts/HomePointBox.astro';
 		grid-gap: 3rem;
 		margin-top: 3rem;
 	}
+	h1 {
+		font-size: 3rem;
+		text-align:center;
+	}
+	@media (max-width: 700px) {
+		h1 {
+			font-size: 2rem;
+		}
+	}
 	h2 {
 		font-size: 3rem;
 		margin-top: 6rem;
@@ -85,10 +94,9 @@ import HomePointBox from '../layouts/HomePointBox.astro';
 </style>
 
 <HomeLayout>
+	<h1>An Application Platform for Your Personal Web Services</h1>
 	<Markdown>
-	## An Application Platform for Your Personal Web Services
-
-Dropserver is an open source server for hosting a multitude of small web-based applications.
+	Dropserver is an open source server for hosting a multitude of small web-based applications.
 
 With Dropserver the goal is not to scale your application to many users, but to allow each user to run their own applications at a small scale. Dropserver is designed to host multiple different applications just for you, your family, your club, or your small business.
 
