@@ -11,7 +11,7 @@ Dropserver is a fresh take on hosting applications for non-technical users. As s
 
 Dropserver's goal is to allow individuals to host their own personal web-based applications and services in a safe and convenient way. This means:
 
-*   **Security and Privacy:** Minimize the damage a malicious app can do by using the principle of least privilege. See [security model](/security-model/) for details.
+*   **Security and Privacy:** Minimize the damage a malicious app can do by using the principle of least privilege. See [security model](security-model/) for details.
 *   **Convenience:** Users should be able to "install" apps in a few clicks, and not be burdened with maintenance tasks.
 *   **Simplicity:** Assume users are not experts. Minimize configuration options and favor making safe decisions for them.
 *   **Portability:** Should they choose to move to a different host, or want to host under a different domain, an existing service should be transplantable with minimal fuss.
@@ -52,7 +52,7 @@ The address must be a unique domain and subdomain combination to ensure cookies 
 
 Each appspace is run by a single application at a given version.
 
-Application code consists of one or more files, including JavaScript code that runs in response to inbound requests (see sandbox in [security model](/security-model/)), frontend code files, assets, data files, and anything else that is needed.
+Application code consists of one or more files, including JavaScript code that runs in response to inbound requests (see sandbox in [security model](security-model/)), frontend code files, assets, data files, and anything else that is needed.
 
 One application can be used to run multiple appspaces, however each appspace is completely independent.
 
