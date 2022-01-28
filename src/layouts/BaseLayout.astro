@@ -24,6 +24,11 @@ ul, ol {
 p, li {
 	line-height: 1.4em;
 }
+p code, ul code {
+	background-color: #e4e4e4;
+	padding: 0 0.2rem;
+	border-radius: 0.2rem;
+}
 
 header {
 	display: flex;
@@ -106,6 +111,9 @@ footer a:hover {
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <title>Dropserver Personal Application Server</title>
+		<style global>
+			@import "../styles/code.css";
+		</style>
     </head>
     <body>
 		<slot />

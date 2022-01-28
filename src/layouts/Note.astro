@@ -1,0 +1,38 @@
+---
+---
+
+<style>
+h5 {
+	margin: 0;
+	margin-left: -35px;
+	font-size: 1.3rem;
+	display: inline-block;
+	background-color: rgb(57, 78, 172);
+	color: white;
+	font-weight:normal;
+	transform: rotate(-6deg);
+	transform-origin: left top;
+	padding: 2px 35px;
+}
+.note {
+	background: linear-gradient(0deg, rgb(57, 78, 172) 0%, rgb(235, 54, 54) 50%, rgba(252,176,69,1) 100%);	/*rgba(131,58,180,1)*/
+	margin: 1em 0;
+}
+.inner {
+	margin-left: 10px;
+	padding: 10px;
+	background-color: white;
+}
+p {
+	margin: 0;
+}
+</style>
+
+<div class="note">
+	<div class="inner">
+		<h5>Note:</h5>
+		<p>
+			<slot />
+		</p>
+	</div>
+</div>

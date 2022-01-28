@@ -7,19 +7,13 @@ layout: ../../layouts/DocsLayout.astro
 
 Docs are very sparse and a work in progress right now.
 
-- How Does Dropserver Work?
+- Understand Dropserver
   - [Basics](basics)
   - [Application Model](application-model)
   - [Security Model](security-model)
-  - Users and Logins
-  - ...
-- Dropserver Admin Guide
-  - ...
-- Dropserver User Guide
-  - ...
+  - Users and Logins (coming later)
 - Build Apps for Dropserver
-  - Basics
-  - Sandbox APIs
-  - Frontend Helpers
-  - Using ds-dev
-  - ...
+  - [Tutorial: Build a Dropserver App](build-dropserver-app-tutorial)
+  - [Using ds-dev](ds-dev)
+  - More guides coming...
+- More coming...
