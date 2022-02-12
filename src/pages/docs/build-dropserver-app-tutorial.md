@@ -3,6 +3,7 @@ title: "Tutorial: Build a Dropserver Application"
 layout: ../../layouts/DocsPageLayout.astro
 setup: |
   import Note from '../../layouts/Note.astro'
+author: Olivier
 ---
 
 # Tutorial: Build a Dropserver Application
@@ -25,13 +26,11 @@ Every app must include a `dropapp.json` file in the root of its directory that t
 {
 	"name":	"Tutorial App",
 	"version": "0.1.0",
-	"api": 0
 }
 ```
 
 - `name` of your app. This is reflected in the UI.
 - `version` of your app in semver format. DS uses that to sort versions of an app and offer upgrades and downgrades to the user.
-- `api` should be `0`. (This field is likely to be removed soon, but for now it is still required.)
 
 Now create `tutorial-app/app.ts`. Here again the name is important.
 
@@ -39,8 +38,8 @@ We will write the minimal code needed to respond "hello world" to a request to t
 
 ```ts
 // The dropserver_app library contains everything you need to build an app for Dropserver.
-import createApp from 'https://deno.land/x/dropserver_app@v0.1.0/mod.ts';
-import RoutesBuilder, {AuthAllow, Context} from 'https://deno.land/x/dropserver_app@v0.1.0/approutes.ts';
+import createApp from 'https://deno.land/x/dropserver_app@v0.1.1/mod.ts';
+import RoutesBuilder, {AuthAllow, Context} from 'https://deno.land/x/dropserver_app@v0.1.1/approutes.ts';
 
 // helloWorld is the handler for the request.
 function helloWorld(ctx:Context) {
@@ -59,17 +58,25 @@ createApp({
 });
 ```
 
+The `createApp` function from the `dropserver_app` library serves as a bridge between your code and the lower level sandbox API. Check the [generated docs](https://doc.deno.land/https://deno.land/x/dropserver_app/mod.ts) for more details.
+
+<Note>Always import a pinned version of the `dropserver_app` library.</Note>
+
 Let's start up `ds-dev` to see what it looks like:
 
 ```bash
 $ ds-dev -app=/path/to/tutorial-app/
 ```
 
-`ds-dev` will immediately run a sandbox to load your app's configuration. You can see the result by opening `http://localhost:3003/dropserver-dev/` in a browser. There you should see the app name and version at the top, the app log with a few entries from the initial run of the sandbox, and the app routes with a single public route for `helloWorld`.
+`ds-dev` will immediately run a sandbox to load your app's configuration. Essentially it runs `app.ts` and collects the data that you passed to the `createApp` function. You can see the result by opening `http://localhost:3003/dropserver-dev/` in a browser. Int he "App" tab you should see the app name and version, and the "App Routes" listing with the single public route that calls `helloWorld`.
+
+![](/docs/app-tutorial/app-loaded.png)
 
 Let's hit that route by opening `http://localhost:3003` in another tab and see that you get "hello world".
 
-Back in the `dropserver-dev/` tab, notice that the "Route hits" panel shows a hit for "/". (img)
+Back in the `dropserver-dev/` tab, notice that the "Route Hits" panel shows a hit for "/", along with the app route that matched.
+
+![](/docs/app-tutorial/route-hit.png)
 
 ## 2. Hello Stranger
 
@@ -84,21 +91,23 @@ First let's make one small change to `app.ts`:
 r.add("get", "/", {allow:AuthAllow.authorized}, helloWorld);
 ```
 
-Notice that if you left ds-dev running, the app sandbox should have run again and reloaded the routes. The routes table shows the same route as before but with "Auth - ", indicating it's a route that is only accessible to an authorized user.
+Notice that if you left `ds-dev` running, the app sandbox should have run again and reloaded the routes. The "App Routes" listing shows the same route as before but with "Auth - ", indicating it's a route that is only accessible to an authorized user.
 
 Now reload the `http://localhost:3003` tab.
 
-Oops! you should get 403: Forbidden. This is because this route is only accessible to an authenticated user who was added to the appspace, and we have not done that yet.
+Oops! you should get "403: Forbidden". This is because this route is only accessible to an authenticated user who was added to the appspace, and we have not done that yet.
 
 <Note>If you don't get 403, check to make sure you don't have a service worker running on localhost. Go to "Application" tab of you browser dev tools and find the Service Worker panel. Unregister it if it's there.</Note>
 
 ## 3. Hello Friend
 
-Let's create a user. In the ds-dev interface click "Add" above the users table, and give your user a name like "Friend 1" and pick an avatar. (ds-dev has avatars baked in to speed up the process of creating a new user for testing.)
+Let's create a user. In the "Users" tab click the "Add User" button. Give your user a name like "Friend 1" and pick an avatar. (`ds-dev` has avatars baked in to speed up the process of creating a new user for testing.)
 
-Next, make this the active user by clicking in the area left of their name. A green check means ds-dev will interpret all incoming requests as if they were the authenticated user. (img)
+Next, make this the active user by clicking the radio button on the left side of the listing. The UI now shows that "Friend 1" is the "Logged in user". This means `ds-dev` will interpret all incoming requests as if they were from "Friend 1".
 
-Now reload the `http://localhost:3003` tab. You should get "hello world" again. Back at the dropserver-dev tab, you should see a route hit, and the user for that hit is indeed "Friend 1".
+![](/docs/app-tutorial/user.png)
+
+Now reload the `http://localhost:3003` tab. You should get "hello world" again. Back at the `dropserver-dev/` tab, you should see a route hit, and the user for that hit is indeed "Friend 1".
 
 Now let's get more personal by getting information on the authenticated user. First, let's keep the returned value of `createApp` as `app`.
 
@@ -120,13 +129,13 @@ async function helloWorld(ctx:Context) {
 
 `ctx.proxyId` is a string that uniquely identifies the user in the appspace. Note that it is called a "proxy" because it has no identifying value outside the appspace: the same user in a different appspace will have a different Proxy ID.
 
-If you reload the root page you should see your friend's name in the greeting.
+If you reload the root page you should see your user's name in the greeting.
 
 ## 4. Serve Static Content
 
 So far the one route we have is handled by our app's code in the sandbox. It is also possible to serve files directly without invoking the sandbox.
 
-To demonstrate we will load our user's avatar using a static route. Add the this route to your app:
+To demonstrate we will load our user's avatar using a static route. Add this route to your app:
 
 ```ts
 r.add("get", {path:"/avatars", end: false}, {allow:AuthAllow.authorized}, r.staticFileHandler({path:'@avatars/'}));
@@ -138,29 +147,38 @@ To get the host to handle the static file serving, we use a special handler from
 
 We use the path prefix `@avatars` to identify the special directory that contains the avatars for the appspace. To serve files from the app dir use the `@app` prefix, and to serve from the appspace files dir, use `@appspace`.
 
-Save `app.ts` and let the sandbox reload the app data. You should see the new route in the routes panel. Note that loading `/avatars/` results in a 404: Dropserver does not serve directory listings.
+Save `app.ts` and let the sandbox reload the app data. You should see the new route in the routes panel. Note that loading `/avatars/` results in a 404: the static file server does not serve directory listings.
 
 Let's now change the `helloWorld` handler to return some minimal HTML that loads the user's avatar:
 
 ```ts
+import { Html5Entities } from "https://deno.land/x/html_entities@v1.0/mod.js";
+
 async function helloWorld(ctx:Context) {
 	if( !ctx.proxyId ) throw new Error("Expected an authenticated user");
 	const user = await app.getUser(ctx.proxyId);
 	const html = `
-		<h1>Hello ${user.displayName}</h1>
+		<h1>Hello ${Html5Entities.encode(user.displayName)}</h1>
 		<img src="avatars/${user.avatar}">
 	`;
 	ctx.req.respond({body:html});
 }
 ```
 
+<Note>
+We're returning HTML now so it's important to HTML-encode the strings we can not trust, such as user.displayName. (You can trust user.avatar as it's generated by Dropserver using plain text characters.)
+</Note>
+
 If you reload the page now, you should see the user's avatar below the greeting. You will also notice an additional route hit for the avatar.
 
 Finally let's demonstrate that static assets can be served without using the sandbox:
 
-- Use dev tools or right-click on the avatar to get its URL. 
-- In `dropserver-dev/` click the "Kill" button to turn off the sandbox. You should see "Sandbox terminated" in the appspace log.
-- Now try loading the avatar by pasting the URL in the address bar. You'll notice that the route hit was registered on the host, and that the avatar loaded, but the sandbox did not start.
+- Use dev tools or right-click on the avatar to copy its URL. 
+- In `dropserver-dev/` click the "Kill" button to turn off the sandbox.
+- Now try loading the avatar by pasting the URL in the address bar.
+- Notice that the route hit was registered on the host, and that the avatar loaded, but the sandbox did not start.
+
+Serving a file statically consumes far fewer computing resources compared to using the sandbox. For this reason it is a good idea to leverage this capability when it makes sense.
 
 ## 5. Debugging
 
@@ -175,11 +193,11 @@ Load the "/" page to trigger the handler again. You will see that the appspace l
 
 If that's not enough to sort out what is happening, the next step is to use the debugger.
 
-- In `/dropserver-dev/` click the "Inspect" button. It changes color to indicate this mode is active.
+- In `/dropserver-dev/` click the "Inspect" button.
 - Now reload your "/" page again. It will appear to hang.
 - Back in `/dropserver-dev/` tab, the appspace log tells you that Deno is waiting for the debugger to connect.
 - Fire up the Chrome web browser (other browsers may work too, but I haven't tried) and visit `chrome://inspect`. There you should see a remote target for Deno. Click "inspect"
-- Click "Add folder to workspace" and add `tutorial-app/`.
+- Click "Add folder to workspace" and add `tutorial-app/`. (You only need to do this once.)
 - Open `app.ts` and set a breakpoint in your handler.
 - Click the debugger's "Resume script execution" button. It should stop again at your breakpoint where you can inspect variables and step through as needed.
 
@@ -198,7 +216,7 @@ To demonstrate migrations we'll create an empty text file to which we will appen
 Let's add this code to our `app.ts`:
 
 ```ts
-import MigrationsBuilder from 'https://deno.land/x/dropserver_app@v0.1.0/migrations.ts';
+import MigrationsBuilder from 'https://deno.land/x/dropserver_app@v0.1.1/migrations.ts';
 
 const m = new MigrationsBuilder;
 // create a migration from schema 0 to 1:
@@ -220,11 +238,11 @@ const app = createApp({
 });
 ```
 
-Save `app.ts` and take a close look at the `/dropserver-dev/` tab. Under "App" you can see that Schema is "1", while under "Appspace" the Schema is "0". By creating a migration to schema 1, we told Dropserver that this version of the app expects the appspace to be on schema 1. Meanwhile, the appspace directory is blank so it is Schema 0.
+Save `app.ts` and take a close look at the `/dropserver-dev/` tab. In the "App" tab you can see that Schema is "1", while in the "Appspace" tab the Schema is "0". By creating a migration to schema 1, we told Dropserver that this version of the app expects the appspace to be on schema 1. Meanwhile, the appspace directory is blank so it is Schema 0.
 
 The appsace status is "Migration Required" which means it is unusable. Any request to the appspace is blocked to prevent running the app while the appspace files are not in the correct schema. Go ahead and try loading "/" page of the appspace now, you will get a 503 Service Unavailable.
 
-Let's run the migration to fix this. In `/dropserver-dev/` select "1" in the migrations drop-down and click "Migrate". This fires up a sandbox to run the code that creates the blank `visitors.txt` file.
+Let's run the migration to fix this. In the "Appspace" tab select "1" in the migrations drop-down and click "Migrate". This fires up a sandbox to run the code that creates the blank `visitors.txt` file. You'll notice the appspace schema is now 1 and the appspace is "Ready". You can also open a file explorer at the "Working Dir" location and see an empty file at `data/files/visitors.txt`.
 
 <Note>In `ds-dev` migrations are run manually to give you more control and to permit debugging the migration code. In `ds-host`migrations are run automatically as needed when the app version changes.</Note>
 
@@ -243,10 +261,10 @@ async function helloWorld(ctx:Context) {
 	await Deno.writeFile(app.appspacePath('visitors.txt'), new TextEncoder().encode(user.displayName+'\n'), {append:true});
 
 	const html = `
-		<h1>Hello ${user.displayName}</h1>
+		<h1>Hello ${Html5Entities.encode(user.displayName)}</h1>
 		<img src="avatars/${user.avatar}">
-		<pre>${visitors}</pre>
-	`;	// note we dump the visitors text in a pre tag for easy rendering.
+		<p>${visitors.split('\n').map(Html5Entities.encode).join('<br/>')}
+	`;	
 
 	ctx.req.respond({body:html});
 }
