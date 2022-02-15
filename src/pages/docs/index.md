@@ -8,7 +8,6 @@ layout: ../../layouts/DocsLayout.astro
 Docs are very sparse and a work in progress right now.
 
 - Understand Dropserver
-  - [Basics](basics)
   - [Application Model](application-model)
   - [Security Model](security-model)
   - Users and Logins (coming later)
