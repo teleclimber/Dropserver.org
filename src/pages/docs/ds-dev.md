@@ -34,7 +34,7 @@ To run `ds-dev` you point it to the directory of the app that you are developing
 $ ds-dev -app=/path/to/app/dir/
 ```
 
-Refer to the [tutorial](build-dropserver-app-tutorial) to learn what goes in the "app" directory.
+Refer to the [tutorial](/docs/build-dropserver-app-tutorial/) to learn what goes in the "app" directory.
 
 <Note>Once `ds-dev` has started, you can leave it running while you work on your app code. It will reload the app when you save.</Note>
 
@@ -66,7 +66,7 @@ If `ds-dev` encountered an error while trying to read this data it will report i
 
 ### Appspace Tab
 
-The "Appspace" tab is mostly concerned with the data of this appspace (remember that an "app" is just code and an "appspace" is essentially a data directory for an instance of the app. See [application model page](application-model).)
+The "Appspace" tab is mostly concerned with the data of this appspace (remember that an "app" is just code and an "appspace" is essentially a data directory for an instance of the app. See [application model page](/docs/application-model).)
 
 ![ds-dev appspace tab](/docs/ds-dev/appspace.png)
 
@@ -123,6 +123,6 @@ Click the "Inspect" button to inspect running code. The process is as follows:
 
 ## What Next?
 
-- Build a hello world app in this [tutorial](build-dropserver-app-tutorial).
+- Build a hello world app in this [tutorial](/docs/build-dropserver-app-tutorial).
 - Report any problems with `ds-dev` in [github issues](https://github.com/teleclimber/Dropserver/issues).
 - Question or comment? Find me, the developer, on [Twitter](https://twitter.com/teleclimber) or [Mastodon](https://social.tchncs.de/web/getting-started) or on [my site](https://olivierforget.net).

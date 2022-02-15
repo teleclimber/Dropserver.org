@@ -9,11 +9,11 @@ setup: |
 
 Let's build a [Dropserver](/) App! We'll go step by step to introduce concepts slowly.
 
-We will be writing code in Typescript. By now you might know that Dropserver [uses Deno as its sandbox](security-model/). Any familiarity you have with [Deno](https://deno.land) will be a plus.
+We will be writing code in Typescript. By now you might know that Dropserver [uses Deno as its sandbox](/docs/security-model/). Any familiarity you have with [Deno](https://deno.land) will be a plus.
 
-You may want to keep these pages handy as references should you need clarification on some concepts: Dropserver's [application model](application-model/) and [security model](security-model/).
+You may want to keep these pages handy as references should you need clarification on some concepts: Dropserver's [application model](/docs/application-model/) and [security model](/docs/security-model/).
 
-As we build the app, we will use `ds-dev` to run it locally. Learn [how to install and use `ds-dev`](ds-dev).
+As we build the app, we will use `ds-dev` to run it locally. Learn [how to install and use `ds-dev`](/docs/ds-dev/).
 
 ## 1. Hello World
 
