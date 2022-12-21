@@ -36,7 +36,8 @@ Now create `tutorial-app/app.ts`. Here again the name is important.
 We will write the minimal code needed to respond "hello world" to a request to the root path "/":
 
 ```ts
-// The dropserver_app library contains everything you need to build an app for Dropserver.
+// The dropserver_app library contains everything
+// you need to build an app for Dropserver.
 import {
 	createApp,
 	RoutesBuilder,
@@ -144,7 +145,10 @@ So far the one route we have is handled by our app's code in the sandbox. It is 
 To demonstrate we will load our user's avatar using a static route. Add this route to your app:
 
 ```ts
-r.add("get", {path:"/avatars", end: false}, {allow:AuthAllow.authorized}, r.staticFileHandler({path:'@avatars/'}));
+r.add("get", 
+	{path:"/avatars", end: false},
+	{allow:AuthAllow.authorized},
+	r.staticFileHandler({path:'@avatars/'}));
 ```
 
 Here we declare the path as an object with the property `end: false`. This is basically equivalent to `/avatars/*` and means that requesting `/avatars/some-file.jpg` will match this route.
@@ -229,7 +233,8 @@ const m = new MigrationsBuilder;
 m.upTo(1, async() => {
 	await Deno.create(app.appspacePath('visitors.txt'));
 });
-// An up migration should always be accompanied by a down migration that reverses the changes:
+// An up migration should always be accompanied
+// by a down migration that reverses the changes:
 m.downFrom(1, async() => {
 	await Deno.remove(app.appspacePath('visitors.txt'));
 });
@@ -264,7 +269,10 @@ async function helloWorld(ctx:Context) {
 	const user = await app.getUser(ctx.proxyId);
 
 	// append visitor name to file:
-	await Deno.writeFile(app.appspacePath('visitors.txt'), new TextEncoder().encode(user.displayName+'\n'), {append:true});
+	await Deno.writeFile(
+		app.appspacePath('visitors.txt'),
+		new TextEncoder().encode(user.displayName+'\n'),
+		{append:true});
 
 	ctx.respondHtml(`
 		<h1>Hello ${Html5Entities.encode(user.displayName)}</h1>
