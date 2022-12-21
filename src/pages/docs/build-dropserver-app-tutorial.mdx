@@ -1,9 +1,9 @@
 ---
 title: "Tutorial: Build a Dropserver Application"
 layout: ../../layouts/DocsPageLayout.astro
-setup: |
-  import Note from '../../layouts/Note.astro'
 ---
+
+import Note from '../../layouts/Note.astro';
 
 # Tutorial: Build a Dropserver Application
 
@@ -250,7 +250,7 @@ The appsace status is "Migration Required" which means it is unusable. Any reque
 
 Let's run the migration to fix this. In the "Appspace" tab select "1" in the migrations drop-down and click "Migrate". This fires up a sandbox to run the code that creates the blank `visitors.txt` file. You'll notice the appspace schema is now 1 and the appspace is "Ready". You can also open a file explorer at the "Working Dir" location and see an empty file at `data/files/visitors.txt`.
 
-<Note>In `ds-dev` migrations are run manually to give you more control and to permit debugging the migration code. In `ds-host`migrations are run automatically as needed when the app version changes.</Note>
+<Note>In `ds-dev` migrations are run manually to give you more control and to permit debugging the migration code. In `ds-host` migrations are run automatically as needed when the app version changes.</Note>
 
 Now let's change our handler to log each visitor:
 
@@ -284,7 +284,7 @@ Where to go next:
 
 - Spot an issue? Report them here: [dropserver_app issues](https://github.com/teleclimber/dropserver_app/issues) and [ds-dev/ds-host issues](https://github.com/teleclimber/Dropserver/issues)
 - Looking for a more complete example? Check out the [Leftovers app](https://github.com/teleclimber/Leftovers)
-- Question or comment? Find me on [Twitter](https://twitter.com/teleclimber) or [Mastodon](https://social.tchncs.de/web/getting-started) or on [my site](https://olivierforget.net).
+- Question or comment? Find me [Mastodon](https://social.tchncs.de/web/getting-started) or on [my site](https://olivierforget.net).
 
 
 

@@ -1,7 +1,7 @@
 ---
 const {title} = Astro.props;
 ---
-<style global>
+<style is:global>
 body {
     --main-color: rgb(81, 93, 148);
     --max-width: 900px;
@@ -111,7 +111,7 @@ footer a:hover {
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <title>Dropserver Personal Application Server</title>
-		<style global>
+		<style is:global>
 			@import "../styles/code.css";
 		</style>
     </head>

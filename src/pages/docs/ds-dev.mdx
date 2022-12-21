@@ -1,11 +1,11 @@
 ---
 title: "ds-dev - Dropserver Documentation"
 layout: ../../layouts/DocsPageLayout.astro
-setup: |
-  import Note from '../../layouts/Note.astro'
 ---
 
-# Using `ds-dev` to Develop Dropserver Applications
+import Note from '../../layouts/Note.astro';
+
+# Using ds-dev to Develop Dropserver Applications
 
 `ds-dev` is a command line tool that runs Dropserver applications locally for the purpose of developing apps.
 
@@ -20,13 +20,13 @@ Some features and capabilities:
 - Manually run migrations to test your migration code
 - Set "Inspect" mode to debug your app code as it runs in the sandbox.
 
-## Installing `ds-dev`
+## Installing ds-dev
 
 Get the `ds-dev` executable from the [Dropserver releases](https://github.com/teleclimber/Dropserver/releases) page. The packaged executable is available for MacOS or Linux. Windows users should use the Linux version under WSL2.
 
 <Note>Dropserver uses Deno as its sandbox, therefore `ds-dev` requires [Deno](https://deno.land) to be installed and available on the path.</Note>
 
-## Running `ds-dev`
+## Running ds-dev
 
 To run `ds-dev` you point it to the directory of the app that you are developing:
 
@@ -48,7 +48,7 @@ If you downloaded appspace data from `ds-host` you must unzip it before pointing
 
 <Note>The appspace data is never modified. `ds-dev` copies all the files from the provided directory into a temporary directory, and uses that as the working data.</Note>
 
-## `ds-dev` UI Basics
+## ds-dev UI Basics
 
 Once running `ds-dev` should indicate that its UI is available at `http://localhost:3003/dropserver-dev/`. Make sure this port is available prior to running `ds-dev`.
 
@@ -125,4 +125,4 @@ Click the "Inspect" button to inspect running code. The process is as follows:
 
 - Build a hello world app in this [tutorial](/docs/build-dropserver-app-tutorial).
 - Report any problems with `ds-dev` in [github issues](https://github.com/teleclimber/Dropserver/issues).
-- Question or comment? Find me, the developer, on [Twitter](https://twitter.com/teleclimber) or [Mastodon](https://social.tchncs.de/web/getting-started) or on [my site](https://olivierforget.net).
+- Question or comment? Find me, the developer, on [Mastodon](https://social.tchncs.de/web/getting-started) or on [my site](https://olivierforget.net).
