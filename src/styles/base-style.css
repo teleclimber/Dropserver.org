@@ -1,0 +1,120 @@
+body {
+	--main-color: rgb(81, 93, 148);
+	--max-width: 900px;
+	margin: 0;
+	padding: 0;
+	background: rgb(248, 248, 248);
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+	font-size: 1.3em;
+}
+
+header, article, nav {
+	max-width: var(--max-width);
+	margin-left: auto;
+	margin-right: auto;
+	padding: 0 0.5rem;
+}
+ul, ol {
+	padding-left: 2em;
+}
+p, li {
+	line-height: 1.4em;
+}
+p code, ul code, ol code {
+	background-color: #e4e4e4;
+	padding: 0 0.2rem;
+	border-radius: 0.2rem;
+}
+
+header {
+	display: flex;
+	flex-direction: column;
+}
+/* @media (min-width: 500px) { */
+	header {
+		flex-direction: row;
+		justify-content: space-between;
+		align-items: center;
+	}	
+/* } */
+
+h1.dropserver-logo.big {
+	font-size:2.5rem;
+}
+@media (min-width: 500px) {
+	h1.dropserver-logo.big {
+		font-size:3.25rem;
+	}	
+}
+.dropserver-logo a {
+	text-decoration: none;
+	color: black;
+}
+.dropserver-logo .drop-o {
+	text-shadow:
+		0px -0.3em 0px hsl( 0, 0%, 70% ) ,
+		0px -0.6em 0px hsl( 0, 0%, 84% ) ,
+		0px -1.0em 0px hsl( 0, 0%, 92% ) ;
+}
+.dropserver-logo .s {
+	color: rgba(253,29,29,1);
+}
+@supports( background-clip: text ) {
+	.dropserver-logo .s {
+		background: linear-gradient(-90deg, rgb(57, 78, 172) 0%, rgb(235, 54, 54) 50%, rgba(252,176,69,1) 100%);	/*rgba(131,58,180,1)*/
+		background-clip: text;
+		color: transparent;
+	}
+}
+@supports( -webkit-background-clip: text ) {
+	.dropserver-logo .s {
+		background: linear-gradient(-90deg, rgb(57, 78, 172) 0%, rgb(235, 54, 54) 50%, rgba(252,176,69,1) 100%);	/*rgba(131,58,180,1)*/
+		-webkit-background-clip: text;
+		color: transparent;
+	}
+}
+
+footer {
+	margin: 1.5em 0 0 0;
+	padding: 1em 0 5em 0;
+	background-color: #eee;
+	color: #888;
+	text-align: center;
+}
+footer .copy {
+	margin: 1.5em;
+}
+footer a {
+	color: #555;
+}
+footer a:hover {
+	color: black;
+}
+
+@media (max-width: 500px) {
+	body {
+		font-size: 1.1em;
+	}
+	ul, ol {
+		padding-left: 1.5rem;
+	}
+}
+pre {
+	padding: 0.5rem 1rem;
+	overflow: auto;
+	border-radius: 5px;
+  }
+  code {
+	padding: 0.5em;
+	border-radius: 4px;
+	font-family: Consolas, Monaco, 'Andale Mono', monospace;
+	font-size: 0.9em;
+  }
+  pre > code {
+	padding: 0;
+	line-height: 1.5;
+	word-break: normal;
+	white-space: pre;
+	word-spacing: normal;
+	tab-size: 4;
+  }
