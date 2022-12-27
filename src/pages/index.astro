@@ -153,17 +153,19 @@ import HomePointBox from '../layouts/HomePointBox.astro';
 	</div>
 
 	<h2>Apps<span class="drop-ghosts">?</span></h2>
-	<p>For now there are no apps (OK, there is <a href="https://github.com/teleclimber/Leftovers">one</a>), but a goal of Dropserver is to make it very easy to create the backend for a simple application.</p>
-	<p>Dropserver provides user management, authentication, file storage and serving of static assets, TLS, data migration hooks, and more... so that building a backend for a simple web service is as easy as possible.</p>
-	<p>Learn the basics of writing an app in the <a href="/docs/build-dropserver-app-tutorial">tutorial here</a>.</p>
+	<p>While there are a handful of apps for Dropserver, the first adopters will likely be people who want to build an app to scratch their own itch.</p>
+	<p>Luckily one of the goals of Dropserver is that it should be as easy as possible to create the backend of an app. Dropserver provides user management, authentication, file storage and serving of static assets, TLS, data migration hooks, and more... so all you have to code is your business logic.</p>
+	<p>For example the backend for this 
+		<a href="https://olivierforget.net/blog/2022/secret-santa-dropserver-app/">Secret Santa app</a> is a <strong>single TypeScript file, 120 lines long!</strong></p>
 	<p>With that, here are some ideas of what you might build for Dropserver:</p>
 	<ul>
-		<li>Completely private single-user service, like a personal journal. This would have zero public routes and nobody but yourself would have access. However, unlike purely on-device native apps, your journal would be available on any device you're logged in to.</li>
-		<li>A family-oriented service, like a refrigerator minder for tracking leftovers. Give other members of the household access. This app exists, see <a href="https://github.com/teleclimber/Leftovers">here</a>.</li>
-		<li>A static site editor and publishing service. The routes for creating content would be private, while the routes that serve the site itself would be public and served statically.</li>
+		<li><strong>Personal journal app</strong>: Completely private single-user service. This would have zero public routes and nobody but yourself would have access. However, unlike purely on-device native apps, your journal would be available on any device you're logged in to.</li>
+		<li><strong>A refrigerator minder</strong> for tracking leftovers. This app exists, see <a href="https://github.com/teleclimber/Leftovers">here</a>. Family-oriented services are well suited because they tend to be multi-user, fairly simple, and privacy is a plus.</li>
+		<li><strong>CMS</strong>: A static site editor and publishing service. The routes for creating content would be private, while the routes that serve the site itself would be public and served statically.</li>
 		<li>An internal tool for work or a club.</li>
+		<li>Any application where there is one or a handful of users that interact with the same data may be a good fit.</li>
 	</ul>
-	<p>Generally speaking, any application where there is one or a handful of users that interact with the same data may be a good fit.</p>
+	<p>Learn the basics of writing an app in the <a href="/docs/build-dropserver-app-tutorial">tutorial here</a>.</p>
 
 	<h2>Dr<span class="drop-ghosts">o</span>p By...</h2>
 	<dl class="drop-by">
