@@ -1,0 +1,249 @@
+---
+title: "ds-host - Dropserver Documentation"
+layout: ../../layouts/DocsPageLayout.astro
+---
+
+import Note from '../../layouts/Note.astro';
+import Warning from '../../layouts/Warning.astro';
+import ValidVersion from '../../layouts/ValidVersion.vue';
+
+# Run your own Dropserver with ds-host
+
+<ValidVersion from="" to="0.8.x"></ValidVersion>
+
+`ds-host` is the full Dropserver and is intended to serve your appspaces in use. `ds-host` serves a user interface for administrators and users, as well as requests destined for appspaces. (see [Application Model](application-model) for a better understanding of this concept.) It can listen on ports 80 and 443 or it can sit behind a reverse proxy (see below). `ds-host` is Linux only and must be run on x86 architecture (for now).
+
+<Note>`ds-host` is for running a full instance of Dropserver. If you just want to run an app locally for development purposes, use [`ds-dev`](ds-dev).</Note>
+
+# Warning ⚠⚠⚠
+
+At this point a good chunk of `ds-host` is functional. You can upload app code, create appspaces, migrate, add users, and use the appspace with other users.
+
+However:
+
+- There are going to be **security holes**. Don't use app code you don't trust. Don't put it up on the public internet unless it's completely isolated in a VM and don't put data on there you can't afford to have stolen.
+- Leaks! Memory 📈 goroutines 📈
+- Lots of missing or half-baked functionality
+- Some of the UI is un-styled, incomplete, or simply missing entirely
+- No user docs
+- APIs that the apps use are going to change a lot
+- Config file schema will change too
+
+# Install ds-host 
+
+Obtain the latest release from the [Releases](https://github.com/teleclimber/Dropserver/releases) page and unzip. Place in `/usr/local/bin` or some other directory of your choice.
+
+You should have [Deno](https//deno.land) installed and available from wherever you'll be running `ds-host.
+
+### Domain Name and TLS cert
+
+In the current version of `ds-host` you need to use an A-record (and a AAAA too for IPv6) to point a domain and its subdomains to the IP of your VM.
+
+You should also obtain a **wildcard** TLS certificate for this domain. You can do this with [Letsencrypt](https://www.digitalocean.com/community/tutorials/how-to-create-let-s-encrypt-wildcard-certificates-with-certbot).
+
+<Note>Dropserver makes use of subdomains to keep appspaces and the admin/user sites in different origins.</Note>
+
+### Create Directories
+
+Create an empty data directory, let's say it is `/srv/dropserver`.
+
+Create and empty directory for sockets, say `/var/run/dropserver`.
+
+Make sure the user that will be running `ds-host` has read, write and execute permissions for these directories.
+
+# Configuration File
+
+Create a configuration file such as `/etc/dropserver.json` and make sure the user running `ds-host` can read it.
+
+Read below for configuration examples.
+
+### Behind Reverse Proxy
+
+If you are running `ds-host` behind a reverse proxy listening on ports 80 and 443 with SSL termination (recommended) your config might look something like this:
+
+```json
+{
+	"data-dir": "/srv/dropserver",
+	"server": {
+		"port": 5050,
+		"host": "example.com",
+		"ssl-cert": "",
+		"ssl-key": ""
+	},
+	"port-string":"",
+	"subdomains":{
+		"user-accounts": "dropid",
+		"static-assets": "static"
+	},
+	"sandbox":{
+		"sockets-dir": "/var/run/dropserver",
+		"use-cgroups": false
+	}
+}
+```
+
+With the chosen subdomains, you log in at https://dropid.example.com.
+
+<Note>Currently `ds-host` does not serve anything when loading the naked domain (example.com). To log in, visit dropid.example.com (replacing example.com with your domain naturally).</Note>
+
+### Local Network
+
+If you are experimenting on a local network and you are using non-standard ports, you might try a configuration like this one:
+
+```json
+{
+	"data-dir": "/srv/dropserver",
+	"server": {
+		"port": 5050,
+		"host": "example.com",
+		"ssl-cert": "/path/to/ssl/example_com.crt",
+		"ssl-key": "/path/to/ssl/example_com.key"
+	},
+	"port-string":":5050",
+	"trust-cert": "/path/to/ssl/rootSSL.pem",
+	"subdomains":{
+		"user-accounts": "dropid",
+		"static-assets": "static"
+	},
+	"sandbox":{
+		"sockets-dir": "/var/run/dropserver",
+		"use-cgroups": false
+	}
+}
+```
+
+Notes:
+- site will be reachable at https://dropid.example.com:5050 (Set your local DNS server accordingly)
+- there would be no reverse proxy in this scenario, and `ds-host` does the SSL termination
+- `port-string` is used when generating links in case your installation is reachable on a port other than :80 or :443. In this case it's `:5050`.
+- `trust-cert` lets you specify the root SSL cert of your root CA
+
+
+### No TLS
+
+You can also skip the whole TLS thing for local experimentation like this:
+
+```json
+{
+	"data-dir": "/srv/dropserver",
+	"server": {
+		"port": 5050,
+		"host": "example.com",
+		"ssl-cert": "",
+		"ssl-key": ""
+	},
+	"no-tls": true,
+	"port-string":":5050",
+	"subdomains":{
+		"user-accounts": "dropid",
+		"static-assets": "static"
+	},
+	"sandbox":{
+		"sockets-dir": "/var/run/dropserver",
+		"use-cgroups": false
+	}
+}
+```
+
+### CGroups
+
+Regardless of the configuration you use from above, you can add cgroup control of sandbox resource usage.
+
+By default `ds-host` uses cgroups (version 2) to measure and control resources used by appspaces (this is a work in progress). 
+
+<Note>To use cgroups, `ds-host` must run in a delegatable cgroup. This is typically accomplished by having systemd run ds-host as a service, and setting `Delegate=true` in the service config (see below).</Note>
+
+The default config for cgroups looks like this:
+
+```json
+{
+	...
+	"sandbox": {
+		...
+		"use-cgroups": true,
+		"cgroup-mount": "/sys/fs/cgroup",
+		"memory-high-mb": 512
+	}
+}
+```
+
+- `use-cgroups` set to false if you can not or do not want to deal with cgroups.
+- `cgroup-mount`: the location of your system's cgroups.
+- `memory-high-mb`: the `memory.high` value for the cgroup that contains all the sandbox cgroups, in megabytes.
+
+## Initial Run
+
+Once you have a configuration file ready, initialize the DB. The `-migrate` flag will migrate the DB to the latest schema, creating a DB in the process if none is found in your data directory.
+
+```
+$ ds-host -config=/etc/dropserver.json -migrate
+```
+
+Next, create an admin user. Running the `ds-host` command while there is no admin user will automatically prompt for a user then exit:
+
+```
+$ ds-host -config=/etc/dropserver.json
+```
+
+Finally, you can start `ds-host` directly using the same command again:
+
+```
+$ ds-host -config=/etc/dropserver.json
+```
+
+## Run with Systemd
+
+In practice it's easier to have systemd run `ds-host`. This is particularly true if you have configured resource limits of appspace sandboxes using cgroups.
+
+Here is a minimal unit file you can use to get started. Replace values as needed and save it as `/etc/systemd/system/dropserver.service`.
+
+```
+[Unit]
+Description=Dropserver service
+ConditionPathExists=/path/to/ds-host
+After=network.target
+
+[Service]
+Type=simple
+User=dsuser
+Group=dsuser
+TimeoutStopSec=15
+
+Delegate=true
+
+ExecStart=/path/to/ds-host -config=/etc/dropserver.json
+
+[Install]
+WantedBy=multi-user.target
+```
+
+Then you can start the service:
+
+```
+$ sudo systemctl start dropserver 
+```
+
+Check the service is running with:
+
+```
+$ systemctl status dropserver 
+```
+
+Tail the logs using:
+
+```
+$ journalctl -u dropserver.service -f
+```
+
+## Log In
+
+Now that `ds-host` is running log in at the `user-accounts` subdomain specified in your config.
+
+Once logged in, some of the first things to do will be:
+
+- Create a dropid for yourself. A dropid is an id that can be a user of an appspace.
+- Add an app by uploading it manually. I recommend you go through the [app tutorial](build-dropserver-app-tutorial) to understand what goes into making apps.
+- Create an Appspace by choosing an app and a subdomain.
+
+<Note>The user interface in `ds-host` is unfinished and documentation on how to use it is unwritten. So poke around and ask me questions directly via email or mastodon.</Note>
+
