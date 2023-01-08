@@ -1,0 +1,92 @@
+---
+title: "ds-host configuration - Dropserver Documentation"
+layout: ../../layouts/DocsPageLayout.astro
+---
+
+import Note from '../../layouts/Note.astro';
+import ValidVersion from '../../layouts/ValidVersion.vue';
+
+# Configuration Variables for ds-host
+
+<ValidVersion from="0.9.0"></ValidVersion>
+
+The `ds-host` config file is a json formatted text file that is passed to the application using the `-config=` flag.
+
+See the help page on installing and running `ds-host` for [example configurations](ds-host). Below you will find a reference for all keys of the JSON object:
+
+### Data Directory
+
+`data-dir`: The absolute path of the directory dedicated to dropserver data. It should be empty and the user that runs `ds-host` should have read write and execute permissions.
+
+### Server
+
+`server.http-port`: The port used to listen for HTTP connections. Defaults to 80.
+
+`server.tls-port`: The port used to listen for HTTPS connections. Defaults to 443.
+
+`server.no-tls`: If set to true, `ds-host` will not start a TLS server. This is useful if it is running behind a reverse proxy with TLS termination, or if you are experimenting locally and want to skip the whole TLS security thing.
+
+`server.tls-cert`: Absolute path to a TLS certificate. You should specify this if you are doing TLS termination and you are not `ds-host`'s ability to manage certificates for you (see below).
+
+<Note>The certificate must be a wildcard certificate so that subdomains can be secured as well. If your domain is example.com, the cert should be for *.example.com.</Note>
+
+`server.tls-key`: The key for the certificate above.
+
+### External Access
+
+External access values specify how your instance will be reachable from beyond your reverse proxy, if you have one. The values here are essentially used to create links in the interface that the user will follow.
+
+`external-access.scheme`: "http" or "https". Default is "https".
+
+`external-access.domain`: The domain that points to your instance. Typically you set DNS such that the domain and all subdomains point to your instance. Dropserver makes use of subdomains to separate the origins of different appspaces.
+
+`external-access.subdomain`: The subdomain used for user account and admin access. This defaults to "dropid".
+
+`external-access.port`: The port to use to connect. Defaults to 443.
+
+### Manage TLS Certificates
+
+`ds-host` can automatically obtain TLS certificates for you by interacting with an [ACME](https://en.wikipedia.org/wiki/Automatic_Certificate_Management_Environment) server. To use this feature, set `enable` to true and enter an `acme-account-email`.
+
+`manage-certificates.enable`: Set to true if you want `ds-host` to obtain TLS certs for you. Default is false.
+
+`manage-certificates.acme-account-email`: The email to use for the ACME account. Do not leave empty if `enable` is true.
+
+`manage-certificates.issuer-endpoint`: URL for the endpoint of the ACME server you wish to use. Defaults to using Let's Encrypt.
+
+`manage-certificates.root-ca-certificate`: Absolute path to the root certificate, if any. This is typically used in testing environments, for example if you are obtaining your certificates from [Pebble](https://github.com/letsencrypt/pebble).
+
+`manage-certificates.disable-ocsp-stapling`: Disable OCSP stapling. Defaults to false.
+
+### Sandbox Management
+
+This section specifies how `ds-host` should manage sandboxes for running apps. Consider looking at [Application Model](application-model) for more details.
+
+<Note>Sandbox management is still very much in development.</Note>
+
+`sandbox.sockets-dir`: The absolute path of the directory dedicated to dropserver sockets. Example: `/var/run/dropserver`. It should be empty and the user that runs `ds-host` should have read write and execute permissions.
+
+`sandbox.num`: Number of Deno sandboxes that should run at once. `ds-host` will try to shut down sandboxes to not exceed this number. Rule of thumb that works for now: assume you need 150 Megs of RAM per running sandbox. Default value is 3.
+
+`sandbox.use-cgroups`: Enable cgroups V2 oversight of your sandboxes. This feature is functional but incomplete. Default is true (enabled).
+
+<Note>To use cgroups, `ds-host` must run in a delegatable cgroup. This is typically accomplished by having systemd run ds-host as a service, and setting `Delegate=true` in the service config.</Note>
+
+`sandbox.cgroup-mount`: The location of your system's cgroups. Default is `/sys/fs/cgroup`.
+
+`sandbox.memory-high-mb`: The number of Megabytes of memory that all sandboxes can use together. Default is 512.
+
+### Prometheus
+
+Expose Go runtime metrics via a server running at `port` which can ingested by [Prometheus](https://prometheus.io/).
+
+`prometheus.enable`: Turn on Prometheus metrics server. Defaults to false.
+
+`prometheus.port`: The port the Prometheus server should listen on.
+
+### Other
+
+`log`: The absolute path for the log. When using systemd, it's fine to leave empty and let journald handle log data.
+
+`trust-cert`: The absolute path of a root CA certificate. This is solely used to secure connections between instances of `ds-host` which may have a self-signed certificate. Used internally for testing.
+

@@ -9,7 +9,7 @@ import ValidVersion from '../../layouts/ValidVersion.vue';
 
 # Run your own Dropserver with ds-host
 
-<ValidVersion from="0.9.0"></ValidVersion>
+<ValidVersion from="" to="0.8.x"></ValidVersion>
 
 `ds-host` is the full Dropserver and is intended to serve your appspaces in use. `ds-host` serves a user interface for administrators and users, as well as requests destined for appspaces. (see [Application Model](application-model) for a better understanding of this concept.) It can listen on ports 80 and 443 or it can sit behind a reverse proxy (see below). `ds-host` is Linux only and must be run on x86 architecture (for now).
 
@@ -35,11 +35,13 @@ Obtain the latest release from the [Releases](https://github.com/teleclimber/Dro
 
 You should have [Deno](https://deno.land) installed and available from wherever you'll be running `ds-host.
 
-### Domain Name
+### Domain Name and TLS cert
 
 In the current version of `ds-host` you need to use an A-record (and a AAAA too for IPv6) to point a domain and its subdomains to the IP of your VM.
 
-<Note>Dropserver makes use of subdomains to keep appspaces and the admin/user sites in different origins, which is why you need to forward the domain and its subdomains.</Note>
+You should also obtain a **wildcard** TLS certificate for this domain. You can do this with [Letsencrypt](https://www.digitalocean.com/community/tutorials/how-to-create-let-s-encrypt-wildcard-certificates-with-certbot).
+
+<Note>Dropserver makes use of subdomains to keep appspaces and the admin/user sites in different origins.</Note>
 
 ### Create Directories
 
@@ -53,37 +55,7 @@ Make sure the user that will be running `ds-host` has read, write and execute pe
 
 Create a configuration file such as `/etc/dropserver.json` and make sure the user running `ds-host` can read it.
 
-Read below for configuration examples, and consult the [configuration variables](ds-host-config-ref) reference for more details.
-
-### With TLS Termination
-
-If you wish expose `ds-host` directly to the internet this configuration will work:
-
-```json
-{
-	"data-dir": "/srv/dropserver",
-	"server": {
-		"tls-port": 443,
-		"http-port": 80
-	},
-	"external-access": {
-		"subdomain": "dropid",
-		"domain": "example.com"
-	},
-	"manage-certificates": {
-		"enable": true,
-		"acme-account-email": "you@example.com"
-	},
-	"sandbox":{
-		"sockets-dir": "/var/run/dropserver",
-		"use-cgroups": false
-	}
-}
-```
-
-In this case `ds-host` will use Let's Encrypt to generate certificates for each subdomain as needed, starting with `dropid.example.com`.
-
-<Note>Currently `ds-host` does not serve anything when loading the naked domain (example.com). To log in you will visit dropid.example.com (replacing example.com with your domain naturally).</Note>
+Read below for configuration examples.
 
 ### Behind Reverse Proxy
 
@@ -93,12 +65,15 @@ If you are running `ds-host` behind a reverse proxy listening on ports 80 and 44
 {
 	"data-dir": "/srv/dropserver",
 	"server": {
-		"http-port": 5050,
-		"no-tls": true
+		"port": 5050,
+		"host": "example.com",
+		"ssl-cert": "",
+		"ssl-key": ""
 	},
-	"external-access": {
-		"subdomain": "dropid",
-		"domain": "example.com"
+	"port-string":"",
+	"subdomains":{
+		"user-accounts": "dropid",
+		"static-assets": "static"
 	},
 	"sandbox":{
 		"sockets-dir": "/var/run/dropserver",
@@ -107,7 +82,9 @@ If you are running `ds-host` behind a reverse proxy listening on ports 80 and 44
 }
 ```
 
-In this case you can not use certificate management on ds-host. In this case it is best to obtain a wildcard certificate for the domain and configure your reverse proxy to use that.
+With the chosen subdomains, you log in at https://dropid.example.com.
+
+<Note>Currently `ds-host` does not serve anything when loading the naked domain (example.com). To log in, visit dropid.example.com (replacing example.com with your domain naturally).</Note>
 
 ### Local Network
 
@@ -117,14 +94,16 @@ If you are experimenting on a local network and you are using non-standard ports
 {
 	"data-dir": "/srv/dropserver",
 	"server": {
-		"tls-port": 5050,
+		"port": 5050,
+		"host": "example.com",
 		"ssl-cert": "/path/to/ssl/example_com.crt",
 		"ssl-key": "/path/to/ssl/example_com.key"
 	},
-	"external-access": {
-		"domain": "example.com",
-		"subdomain": "dropid",
-		"port": 5050
+	"port-string":":5050",
+	"trust-cert": "/path/to/ssl/rootSSL.pem",
+	"subdomains":{
+		"user-accounts": "dropid",
+		"static-assets": "static"
 	},
 	"sandbox":{
 		"sockets-dir": "/var/run/dropserver",
@@ -133,7 +112,12 @@ If you are experimenting on a local network and you are using non-standard ports
 }
 ```
 
-With this configuration the site will be reachable at https://dropid.example.com:5050 (set your local DNS server accordingly). There would be no reverse proxy in this scenario, and `ds-host` does the SSL termination.
+Notes:
+- site will be reachable at https://dropid.example.com:5050 (Set your local DNS server accordingly)
+- there would be no reverse proxy in this scenario, and `ds-host` does the SSL termination
+- `port-string` is used when generating links in case your installation is reachable on a port other than :80 or :443. In this case it's `:5050`.
+- `trust-cert` lets you specify the root SSL cert of your root CA
+
 
 ### No TLS
 
@@ -143,14 +127,16 @@ You can also skip the whole TLS thing for local experimentation like this:
 {
 	"data-dir": "/srv/dropserver",
 	"server": {
-		"http-port": 5050,
-		"no-tls": true
+		"port": 5050,
+		"host": "example.com",
+		"ssl-cert": "",
+		"ssl-key": ""
 	},
-	"external-access": {
-		"scheme": "http",
-		"domain": "example.com",
-		"subdomain": "dropid",
-		"port": 5050
+	"no-tls": true,
+	"port-string":":5050",
+	"subdomains":{
+		"user-accounts": "dropid",
+		"static-assets": "static"
 	},
 	"sandbox":{
 		"sockets-dir": "/var/run/dropserver",
@@ -187,19 +173,23 @@ The default config for cgroups looks like this:
 
 ## Initial Run
 
-Once you have a configuration file ready, initialize the DB. The `-migrate` flag will migrate the DB to the latest schema, creating a DB in the process if needed.
+Once you have a configuration file ready, initialize the DB. The `-migrate` flag will migrate the DB to the latest schema, creating a DB in the process if none is found in your data directory.
 
 ```
 $ ds-host -config=/etc/dropserver.json -migrate
 ```
 
-Finally, you can start `ds-host` directly:
+Next, create an admin user. Running the `ds-host` command while there is no admin user will automatically prompt for a user then exit:
 
 ```
 $ ds-host -config=/etc/dropserver.json
 ```
 
-<Note>The first time you run `ds-host` the system will detect that there is no admin user and it will create a secret link where you can register as an admin. The link is printed in the log output, which is also echoed to your terminal if you run `ds-host` as above. Look for `setup_key_reveal=` and use the link to create an account.</Note>
+Finally, you can start `ds-host` directly using the same command again:
+
+```
+$ ds-host -config=/etc/dropserver.json
+```
 
 ## Run with Systemd
 
@@ -247,7 +237,9 @@ $ journalctl -u dropserver.service -f
 
 ## Log In
 
-Now that `ds-host` is running and you created your admin user, some of the first things to do will be:
+Now that `ds-host` is running log in at the `user-accounts` subdomain specified in your config.
+
+Once logged in, some of the first things to do will be:
 
 - Create a dropid for yourself. A dropid is an id that can be a user of an appspace.
 - Add an app by uploading it manually. I recommend you go through the [app tutorial](build-dropserver-app-tutorial) to understand what goes into making apps.
@@ -255,4 +247,3 @@ Now that `ds-host` is running and you created your admin user, some of the first
 
 <Note>The user interface in `ds-host` is unfinished and documentation on how to use it is unwritten. So poke around and ask me questions directly via email or mastodon.</Note>
 
-Now that you have Dropserver running, have a look at how easy it is to make an app [here](build-dropserver-app-tutorial).
