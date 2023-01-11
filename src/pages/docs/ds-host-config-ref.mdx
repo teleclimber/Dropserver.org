@@ -52,7 +52,7 @@ External access values specify how your instance will be reachable from beyond y
 
 `manage-certificates.acme-account-email`: The email to use for the ACME account. Do not leave empty if `enable` is true.
 
-`manage-certificates.issuer-endpoint`: URL for the endpoint of the ACME server you wish to use. Defaults to using Let's Encrypt.
+`manage-certificates.issuer-endpoint`: URL for the endpoint of the ACME server you wish to use. Defaults to using Let's Encrypt. Defaults to [Let's Encrypt](https://letsencrypt.org/): https://acme-v02.api.letsencrypt.org/directory
 
 `manage-certificates.root-ca-certificate`: Absolute path to the root certificate, if any. This is typically used in testing environments, for example if you are obtaining your certificates from [Pebble](https://github.com/letsencrypt/pebble).
 

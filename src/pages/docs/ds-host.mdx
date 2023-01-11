@@ -37,9 +37,9 @@ You should have [Deno](https://deno.land) installed and available from wherever 
 
 ### Domain Name
 
-In the current version of `ds-host` you need to use an A-record (and a AAAA too for IPv6) to point a domain and its subdomains to the IP of your VM.
+Dropserver makes use of subdomains to separate appspaces and the user administration site into different origins. For this reason you need to forward a domain and all its subdomains to your instance.
 
-<Note>Dropserver makes use of subdomains to keep appspaces and the admin/user sites in different origins, which is why you need to forward the domain and its subdomains.</Note>
+One way to do this is by setting A and AAAA records for '@' and '*' (wildcard) to your instance IP.
 
 ### Create Directories
 
@@ -218,6 +218,9 @@ Type=simple
 User=dsuser
 Group=dsuser
 TimeoutStopSec=15
+
+# This lets ds-host bind to a low port (80, 443) without running as root:
+AmbientCapabilities=CAP_NET_BIND_SERVICE
 
 Delegate=true
 
