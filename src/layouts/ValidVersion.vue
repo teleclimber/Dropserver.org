@@ -41,7 +41,10 @@ if( !props.from && !props.to ) throw new Error("no versions passed to ValidVersi
             <h5>Applicable Versions:</h5>
             <p>
                 This page is valid for 
-                <template v-if="!!from && !!to">
+                <template v-if="!!from && !!to && from === to">
+                    version <span class="ver">{{ from }}</span>.
+                </template>
+                <template v-else-if="!!from && !!to">
                     versions <span class="ver">{{ from }}</span> to <span class="ver">{{ to }}</span>.
                 </template>
                 <template v-else-if="!!from">
@@ -50,7 +53,7 @@ if( !props.from && !props.to ) throw new Error("no versions passed to ValidVersi
                 <template v-else-if="!!to">
                     versions up to <span class="ver">{{ to }}</span>.
                 </template>
-                <template v-else></template>
+                <slot />
             </p>
         </div>
     </div>

@@ -9,9 +9,9 @@ import ValidVersion from '../../layouts/ValidVersion.vue';
 
 # Run your own Dropserver with ds-host
 
-<ValidVersion from="0.10.0">Docs for older versions are [here](ds-host-0.9).</ValidVersion>
+<ValidVersion from="0.9.x" to="0.9.x"></ValidVersion>
 
-`ds-host` is the full Dropserver and is intended to serve your appspaces in use. `ds-host` serves a user interface for administrators and users, as well as requests destined for appspaces. (see [Application Model](application-model) for a better understanding of this concept.) It can listen on ports 80 and 443 or it can sit behind a reverse proxy (see below). `ds-host` is Linux-only and must be run on x86 architecture (for now).
+`ds-host` is the full Dropserver and is intended to serve your appspaces in use. `ds-host` serves a user interface for administrators and users, as well as requests destined for appspaces. (see [Application Model](application-model) for a better understanding of this concept.) It can listen on ports 80 and 443 or it can sit behind a reverse proxy (see below). `ds-host` is Linux only and must be run on x86 architecture (for now).
 
 <Note>`ds-host` is for running a full instance of Dropserver. If you just want to run an app locally for development purposes, use [`ds-dev`](ds-dev).</Note>
 
@@ -33,17 +33,7 @@ However:
 
 Obtain the latest release from the [Releases](https://github.com/teleclimber/Dropserver/releases) page and unzip. Place in `/usr/local/bin` or some other directory of your choice.
 
-### Install Dependencies
-
-You should have [Deno](https://deno.land) installed and available from wherever you'll be running `ds-host`.
-
-[Bubblewrap](https://github.com/containers/bubblewrap) is optional but recommended. It is used to wrap Deno in an additional sandbox based on Linux namespaces. Should a vulnerability be discovered in Deno, Bubblewrap should prevent an exploit from causing any harm. Of course an attacker will try to also find an exploit to get out of the Bubblewrap sandbox too, but two exploits are harder to find than one.
-
-<Note>The way `ds-host` uses `bwrap` currently is preliminary and not ideal. Further improvements to sandbox security can be expected down the road.</Note>
-
-Bubblewrap is available from package managers of most distros. `ds-host` should work with `bwrap` version 0.5 or higher.
-
-If you do not wish to use Bubblewrap set `sandbox.use-bubblewrap` to `false` in your config file. See below for more details.
+You should have [Deno](https://deno.land) installed and available from wherever you'll be running `ds-host.
 
 ### Domain Name
 
@@ -86,7 +76,6 @@ If you wish expose `ds-host` directly to the internet this configuration will wo
 	},
 	"sandbox":{
 		"sockets-dir": "/var/run/dropserver",
-		"use-bubblewrap": false,
 		"use-cgroups": false
 	}
 }
@@ -113,7 +102,6 @@ If you are running `ds-host` behind a reverse proxy listening on ports 80 and 44
 	},
 	"sandbox":{
 		"sockets-dir": "/var/run/dropserver",
-		"use-bubblewrap": false,
 		"use-cgroups": false
 	}
 }
@@ -140,7 +128,6 @@ If you are experimenting on a local network and you are using non-standard ports
 	},
 	"sandbox":{
 		"sockets-dir": "/var/run/dropserver",
-		"use-bubblewrap": false,
 		"use-cgroups": false
 	}
 }
@@ -167,36 +154,9 @@ You can also skip the whole TLS thing for local experimentation like this:
 	},
 	"sandbox":{
 		"sockets-dir": "/var/run/dropserver",
-		"use-bubblewrap": false,
 		"use-cgroups": false
 	}
 }
-```
-
-### Bubblewrap
-
-In the examples above we turned Bubblewrap off for the sake of simplicity. If you have Bublewrap (typically easily installed via your package manager) then you need to make a few changes to your config:
-
-```json
-{
-	...
-	"sandbox": {
-		"use-bubblewrap": true,
-		"bwrap-map-paths": ["..."]
-	}
-}
-```
-
-The `bwrap-map-paths` is the tricky bit. These are the paths from the host that must be mapped to the sandbox such that Deno can work. For Ubuntu, the following seems to work:
-
-```json
-"bwrap-map-paths": ["/lib", "/usr/lib", "/etc", "/lib64", "/run"]
-```
-
-For Arch, this works (and is the default value):
-
-```json
-"bwrap-map-paths": ["/usr/lib", "/etc", "/lib64"]
 ```
 
 ### CGroups
@@ -245,7 +205,7 @@ $ ds-host -config=/etc/dropserver.json
 
 In practice it's easier to have systemd run `ds-host`. This is particularly true if you have configured resource limits of appspace sandboxes using cgroups.
 
-Here is a minimal unit file you can use to get started. Replace values as needed and save it alongside other systemd services (such as `/etc/systemd/system/dropserver.service` on Arch).
+Here is a minimal unit file you can use to get started. Replace values as needed and save it as `/etc/systemd/system/dropserver.service`.
 
 ```
 [Unit]
