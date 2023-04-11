@@ -15,19 +15,17 @@ import ValidVersion from '../../layouts/ValidVersion.vue';
 
 <Note>`ds-host` is for running a full instance of Dropserver. If you just want to run an app locally for development purposes, use [`ds-dev`](ds-dev).</Note>
 
-# Warning ⚠⚠⚠
+# Warning ⚠
 
 At this point a good chunk of `ds-host` is functional. You can upload app code, create appspaces, migrate, add users, and use the appspace with other users.
 
 However:
 
-- There are going to be **security holes**. Don't use app code you don't trust. Don't put it up on the public internet unless it's completely isolated in a VM and don't put data on there you can't afford to have stolen.
-- Leaks! Memory 📈 goroutines 📈
-- Lots of missing or half-baked functionality
-- Some of the UI is un-styled, incomplete, or simply missing entirely
-- No user docs
-- APIs that the apps use are going to change a lot
-- Config file schema will change too
+- There are going to be **security holes**. Don't use app code you don't trust. Don't put it up on the public internet unless it's completely isolated in a VM and don't put data on there you can't afford to have stolen
+- There are some memory and goroutine leaks
+- Some functionality is missing or half-baked
+- APIs that the apps use are going to change a few times before they become stable
+- The config file schema may change too
 
 # Install ds-host 
 
@@ -49,7 +47,7 @@ If you do not wish to use Bubblewrap set `sandbox.use-bubblewrap` to `false` in 
 
 Dropserver makes use of subdomains to separate appspaces and the user administration site into different origins. For this reason you need to forward a domain and all its subdomains to your instance.
 
-One way to do this is by setting A and AAAA records for '@' and '*' (wildcard) to your instance IP.
+One way to do this is by setting A and AAAA records for `@` and `*` (wildcard) to your instance IP.
 
 ### Create Directories
 
@@ -295,7 +293,5 @@ Now that `ds-host` is running and you created your admin user, some of the first
 - Create a dropid for yourself. A dropid is an id that can be a user of an appspace.
 - Add an app by uploading it manually. I recommend you go through the [app tutorial](build-dropserver-app-tutorial) to understand what goes into making apps.
 - Create an Appspace by choosing an app and a subdomain.
-
-<Note>The user interface in `ds-host` is unfinished and documentation on how to use it is unwritten. So poke around and ask me questions directly via email or mastodon.</Note>
 
 Now that you have Dropserver running, have a look at how easy it is to make an app [here](build-dropserver-app-tutorial).
