@@ -6,6 +6,12 @@
         "markdown",
         "latex",
         "plaintext",
-        "html"
-    ]
+        "html",
+        "mdx"
+    ],
+    "spellright.parserByClass": {
+        "mdx": {
+            "parser": "plain"
+        }
+    }
 }

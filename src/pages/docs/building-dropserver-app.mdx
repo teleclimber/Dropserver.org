@@ -1,0 +1,129 @@
+---
+title: "Building a Dropserver App - Dropserver Documentation"
+layout: ../../layouts/DocsPageLayout.astro
+---
+
+
+import ValidVersion from '../../layouts/ValidVersion.vue';
+import Note from '../../layouts/Note.astro';
+
+# Building A Dropserver App
+
+<ValidVersion from="0.11.0"></ValidVersion>
+
+This page gives a high level overview of how a Dropserver app is built. See the [tutorial](build-dropserver-app-tutorial) for a hands-on example.
+
+A Dropserver app is made up of: 
+
+- `dropapp.json` app manifest.
+- One JavaScript or TypeScript "entrypoint" file that creates the application (see below).
+- Any additional backend code. All JS, TS or WASM files must run on [Deno](https://deno.land).
+- Any additional asset needed, such as images and frontend HTML, CSS and JS.
+
+## Directory structure
+
+You're free to arrange your app's code directory structure anyway you like, however there should be a directory that you can point the packaging system to that satisfies the following requirements:
+
+- This directory **must** have a manifest file called `dropapp.json` at its root. See the [Dropserver app manifest reference](app-manifest-ref).
+- All files that need to be packaged with the app must be inside that directory. 
+- Do not use symlinks in the directory.
+
+While a trivial app may have the package directory at the root of the code repository, like the tutorial does. A more typical application will have an `app` subdirectory in the repo that is the root of the package. It includes `app/dropapp.json` and any backend code and assets that do *not* need to be built. (Any other assets that need to be built have their sources outside the `app/` dir and the build process puts the built assets in `app/`.)
+
+The entrypoint file is usually `app/app.ts` or `app/app.js`. If you use a different file name or if it's not in the root directory of your package, then you must declare it in the `entrypoint` field of your `dropapp.json`.
+
+If there is frontend that must be built, the source might be in `frontend/`, and the build target might be `app/frontend/`.
+
+## The Backend code
+
+This "entrypoint" file should import `createApp` from a pinned version of the [`dropserver_app`](https://deno.land/x/dropserver_app) library. It should call the `createApp` function with appropriate parameters to create the app. The value returned from `createApp` can be exported and used to interact with the app elsewhere.
+
+<Note>The [dropserver_app](https://deno.land/x/dropserver_app) library makes it convenient to write a Dropserver app without knowing its ever-changing internals.</Note>
+
+### Backend Basics
+
+Below are some aspects of writing a Dropserver application that differ from other code you may have written before. It's a high level overview. For specifics refer to the [tutorial](build-dropserver-app-tutorial) and the [dropserver_app docs](https://deno.land/x/dropserver_app).
+
+#### No server
+
+You do not create a server in a Dropserver app. The server is run by Dropserver. You just declare routes with callbacks (or other parameters, see below) in `createApp`.
+
+<Note>In the current version of Dropserver, app routes can only be created by using `createApp`. This means you can not create or remove routes of a running app. Use wildcard routes to serve generated assets.</Note>
+
+#### Different route types
+
+When declaring routes, you can specify a route type. Currently there are just two route types: regular callback (which calls a function in the sandbox to respond to a request) and static file handler (which serves files from `@app`, `@appspace` or other valid directory).
+
+#### Local file access
+
+Your app will always run in a sandbox therefore it will not have access to just any part of the file system. In fact it is strictly restricted to the following subdirectories:
+
+- `@app` Read-only. This is the contents of the app package.
+- `@appspace` Read-write. This is where the appspace gets to store its data files.
+- `@avatars` Read-only. A special place for getting avatars for users.
+
+To actually operate in any of these areas, you must first get the actual directory path by calling the appropriate method on your app instance, such as `app.appspacePath()`. You should call this every time you need it because it may change if the appspace gets moved around.
+
+#### Users
+
+User management is handled by Dropserver. Your app should not have any code to handle new user registration, passwords or any other auth, etc... You can get a full list of users from your app instance using `app.getUsers()` or get a specific user with `app.getUser(<proxyID>)`.
+
+A "proxy-id" is a string that uniquely identifies a user in your appspace. Your app does not have access to private identifiers such as email, etc...
+
+### Backend Code Caveats
+
+#### 🚫 localStorage and sessionStorage
+
+Do not store data using `localStorage` / `sessionStorage` from the backend code. [Deno stores that data](https://deno.land/manual@v1.35.1/runtime/web_storage_api#web-storage-api) at a location that is different from the appspace data files, as a result it will not be in appspace backups, and may be lost at any point. See this [issue](https://github.com/teleclimber/Dropserver/issues/54).
+
+Note: this is strictly about backend code. Feel free to use [localStorage and sessionStorage](https://developer.mozilla.org/en-US/docs/Web/API/Web_Storage_API) in your frontend. 
+
+#### Specify a file for Deno Key-Value DB
+
+Similarly to the above, do not use [Deno KV](https://deno.land/manual/runtime/kv) store *without* specifying a file path. When used in that manner, Deno stashes the data in the same obscure location as session and local storage, and it may be lost.
+
+#### Your app code will exit
+
+Assume your code will exit between requests. Any data not stored in the appspace directory may be lost as soon as you are done sending a response to a request.
+
+#### 🚫 Import map
+
+Do not use a Deno [import map](https://deno.land/manual@v1.35.1/basics/import_maps#import-maps). For now Dropserver uses import maps internally, and does not currently attempt to merge any other import maps.
+
+#### Keep it lean
+
+If no sandbox is running when a request is received, `ds-host` must start one and then forward the request. Sandbox start time can become long if the app code imports large number of libraries. For this reason use good judgement when adding code dependencies.
+
+If you do need to depend on a large library for some operations, consider loading asynchronously on an as-needed basis.
+
+#### 🚫 No outbound requests
+
+Dropserver apps can not make outbound requests (meaning they can not initiate contact with other servers).
+
+<Note>This is a temporary restriction that will be lifted as soon as an adequate permission model is written.</Note>
+
+## Frontend and clients
+
+You are free to build any frontend you like for your Dropserver app. Here are some examples:
+
+#### Generate HTML server-side
+
+Generate HTML server-side using a template language of your choice and serve CSS as static files. See the [Secret Santa](https://github.com/teleclimber/SecretSantaDropApp) app code for an example using [Mustache](https://mustache.github.io/mustache.5.html) and one static CSS file.
+
+#### Progressive Web App
+
+Create a PWA Single-Page Application that is built when packaging the app and served statically. See the [Leftovers](https://github.com/teleclimber/Leftovers) code for an example PWA SPA using Vue.
+
+This is a great of providing near-native app experience without dealing with app stores.
+
+<Note>Be aware that Dropserver serves files with a strict [Content Security Policy](https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP) of `default-src: 'self'`.</Note>
+
+#### Native app
+
+Create a native app for your target environment (smartphone, desktop OS, or CLI) and interact with your app via a JSON API. Your native app would be packaged and distributed separately and would include a way to specify the appspace domain.
+
+Note: authentication of appspace users from a native app has not been developed yet.
+
+#### Server-Side Rendered 🤔
+
+An SSR app may work as a Dropserver application, but it's untested. First your SSR coded has to run in Deno, while most assume Node. Second, routing may be an issue. 

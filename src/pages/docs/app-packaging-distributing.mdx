@@ -1,0 +1,52 @@
+---
+title: "Packaging and Distributing Apps - Dropserver Documentation"
+layout: ../../layouts/DocsPageLayout.astro
+
+---
+
+import ValidVersion from '../../layouts/ValidVersion.vue';
+import Note from '../../layouts/Note.astro';
+
+# Packaging and Distributing Apps
+
+<ValidVersion from="0.11.0"></ValidVersion>
+
+Packaging your apps empower other users to install and run them on their own Dropserver instance with minimal effort. A package contains an archive of the application files and assets, and a manifest describing the app.
+
+<Note>This page is a incomplete. App packaging was done in version 0.11, but more work is needed to make distribution and installation convenient.</Note>
+
+## Create an App Package
+
+Developers should follow the guidelines for [building an app](building-dropserver-app).
+
+Note that the backend code might import code from `deno.land/x` and possibly other sources. This is acceptable. The `ds-host` instance will fetch and cache these dependencies as necessary. 
+
+### Package The App
+
+Make sure all built assets get built before running the app packaging tool.
+
+To actually create an app package you must have [`ds-dev`](ds-dev) installed. Run the following command:
+
+```
+ds-dev -app=/path/to/app -create-package=/path/to/dist -package-name=my-super-app
+```  
+
+Note that the app directory is not necessarily the root of your code repository. See the section on directory structure in [building and app](building-dropserver-app).
+
+The directory passed to `-create-package` is where the package file and manifest will be written.
+
+The `-package-name` is the base file name of the package. `ds-dev` will append the version (as specified in the manifest) and the tar.gz extension. In this case: `my-super-app-0.1.0.tar.gz`.
+
+`ds-dev` will also output a complete manifest alongside the package with extension `.json`. This is a convenience and will be used in the future as part of the distribution mechanism.
+
+### Use Your Packaged App
+
+Once a package is created you can use it via `ds-dev`:
+
+```
+ds-dev -app=my-super-app-0.1.0.tar.gz
+```
+
+You can also upload it to your `ds-host` instance via the user interface. If you don't have a ds-host instance, you can spin one up temporarily via [Docker](ds-host-docker).
+
+
