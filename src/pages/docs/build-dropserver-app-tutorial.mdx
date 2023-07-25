@@ -251,7 +251,7 @@ const app = createApp({
 
 Save `app.ts` and take a close look at the `/dropserver-dev/` tab. In the "App" tab you can see that Schema is "1", while in the "Appspace" tab the Schema is "0". By creating a migration to schema 1, we told Dropserver that this version of the app expects the appspace to be on schema 1. Meanwhile, the appspace directory is blank so it is Schema 0.
 
-The appsace status is "Migration Required" which means it is unusable. Any request to the appspace is blocked to prevent running the app while the appspace files are not in the correct schema. Go ahead and try loading "/" page of the appspace now, you will get a 503 Service Unavailable.
+The appspace status is "Migration Required" which means it is unusable. Any request to the appspace is blocked to prevent running the app while the appspace files are not in the correct schema. Go ahead and try loading "/" page of the appspace now, you will get a 503 Service Unavailable.
 
 Let's run the migration to fix this. In the "Appspace" tab select "1" in the migrations drop-down and click "Migrate". This fires up a sandbox to run the code that creates the blank `visitors.txt` file. You'll notice the appspace schema is now 1 and the appspace is "Ready". You can also open a file explorer at the "Working Dir" location and see an empty file at `data/files/visitors.txt`.
 
