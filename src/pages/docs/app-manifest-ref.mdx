@@ -8,7 +8,7 @@ import Note from '../../layouts/Note.astro';
 
 # Dropserver Application Manifest
 
-<ValidVersion from="0.11.0"></ValidVersion>
+<ValidVersion from="0.12.0"></ValidVersion>
 
 The Dropserver application manifest is a `JSON` file located at the root of package and always named `dropapp.json`.
 
@@ -20,7 +20,7 @@ Some parts of the manifest are written directly by the app developer, typically 
 
 The application packaging system runs the app in a sandbox and acquires metadata about the app by querying the running app. This metadata is then combined with the data in `dropapp.json` to create a complete manifest that is included in the package (instead of the original `dropapp.json`).
 
-When a user uploads a new app or new version of an app, the process is repeated: the system runs the app in a sandbox, and overwrites the metadata from teh running app in the manifest. This ensures that tampering with the manifest values has no effect. 
+When a user uploads a new app or new version of an app, the process is repeated: the system runs the app in a sandbox, and overwrites the metadata from the running app in the manifest. This ensures that tampering with the manifest values has no effect. 
 
 ## Manifest Reference
 
@@ -39,6 +39,8 @@ The following are keys of the manifest JSON object. All are optional except for 
 `accent-color`: A CSS color to use to make the app stand out. Currently this color is applied to a thick border above the app box. Choose a bold color that marries with your icon colors. Assume the background is white or light grey, but do not worry about accessibility: the color is never used for text or as a background to text.
 
 `short-description`: A short description for the application. Tell the user what this does for them in one short sentence. Try to keep in under 60 characters.
+
+`changelog`: Relative path to a plain text file containing a human-readable description of changes in the current version. By default the system tries to read `/changelog.txt` in the package if nothing is specified here. The changelog follows [a specific format](app-packaging-distributing#changelog-file-format).
 
 `authors`: An array of objects listing the authors of the app. Each author object consists of: `name`, `url`, and `email`. At times only the first few authors of the array will be shown, therefore these should be the main authors. 
 

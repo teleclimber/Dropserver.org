@@ -9,19 +9,56 @@ import Note from '../../layouts/Note.astro';
 
 # Packaging and Distributing Apps
 
-<ValidVersion from="0.11.0"></ValidVersion>
+<ValidVersion from="0.12.0"></ValidVersion>
 
 Packaging your apps empower other users to install and run them on their own Dropserver instance with minimal effort. A package contains an archive of the application files and assets, and a manifest describing the app.
 
 <Note>This page is a incomplete. App packaging was done in version 0.11, but more work is needed to make distribution and installation convenient.</Note>
 
-## Create an App Package
+## Prepare Your App
+
+While an app may run fine in `ds-dev` or even `ds-host`, it may need a little more polish before distributing it to a broader audience.
 
 Developers should follow the guidelines for [building an app](building-dropserver-app).
 
-Note that the backend code might import code from `deno.land/x` and possibly other sources. This is acceptable. The `ds-host` instance will fetch and cache these dependencies as necessary. 
+Note that the backend code might import code from `deno.land/x` and possibly other sources. This is acceptable. The `ds-host` instance will fetch and cache these dependencies as necessary.
 
-### Package The App
+Some nice things to include in your app before packaging:
+
+- short-description
+- icon
+- accent-color
+- changelog
+- license
+- listing of authors, websites, etc...
+
+See the [app manifest reference](app-manifest-ref) for specific details on each.
+
+### Changelog file format
+
+The changelog is a plain text file that describes changes in the app for the benefit of the end-user.
+
+The changes for a given version are preceded by a line containing the version being described. This version must match exactly the version in the app manifest.
+
+Multiple versions can be described in the changelog file, in any order. See example below:
+
+```
+0.1.1
+
+Removed all the explosions. Sorry about that.
+
+0.1.0
+
+Major release! Explosive new features!
+
+Multiple lines of explosive new features in this release!!
+
+0.0.1
+
+Initial release.
+```
+
+## Create an App Package
 
 Make sure all built assets get built before running the app packaging tool.
 
