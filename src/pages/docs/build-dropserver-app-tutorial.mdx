@@ -24,11 +24,11 @@ Every app must include a `dropapp.json` file in the root of its directory that t
 ```json
 {
 	"name":	"Tutorial App",
-	"version": "0.1.0",
+	"version": "0.1.0"
 }
 ```
 
-- `name` of your app. This is reflected in the UI.
+- `name` of your app.
 - `version` of your app in semver format. DS uses that to sort versions of an app and offer upgrades and downgrades to the user.
 
 Now create `tutorial-app/app.ts`. Here again the name is important.
@@ -177,7 +177,7 @@ If you reload the page you should see the user's avatar below the greeting. You 
 Finally let's demonstrate that static assets can be served without using the sandbox:
 
 - Use dev tools or right-click on the avatar to copy its URL. 
-- In `dropserver-dev/` click the "Kill" button to turn off the sandbox.
+- In the `ds-dev` UI click the "Kill" button to turn off the sandbox.
 - Now try loading the avatar by pasting the URL in the address bar.
 - Notice that the route hit was registered on the host, and that the avatar loaded, but the sandbox did not start.
 
@@ -233,8 +233,7 @@ const m = new MigrationsBuilder;
 m.upTo(1, async() => {
 	await Deno.create(app.appspacePath('visitors.txt'));
 });
-// An up migration should always be accompanied
-// by a down migration that reverses the changes:
+// It's a good idea to add a down migration that reverses the changes if possible
 m.downFrom(1, async() => {
 	await Deno.remove(app.appspacePath('visitors.txt'));
 });
