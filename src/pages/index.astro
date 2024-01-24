@@ -4,6 +4,13 @@ import HomePointBox from '../layouts/HomePointBox.astro';
 ---
 
 <style>
+	.cta {
+		border: 1px dashed rgb(228, 228, 0);
+		background-color: #ffffd3;
+		text-align:center;
+		padding: 0.2rem;
+		font-weight: bold;
+	}
 	.points-grid {
 		display: grid;
 		grid-template-columns: 1fr 1fr;
@@ -98,6 +105,13 @@ import HomePointBox from '../layouts/HomePointBox.astro';
 	<p>You can run your own Dropserver instance for you and your friends, or (hopefully in the future) you will be able to sign up for a commercial host for a few dollars per month.</p>
 	<p>Once you have a Dropserver, installing an application takes a few clicks and "just works".</p>
 
+	<p class="cta">
+		Get the
+		<a href="https://github.com/teleclimber/Dropserver/releases">latest version (0.13 released Jan 24 2024)</a>
+		and read the 
+		<a href="docs">docs to get started</a>.
+	</p>
+
 	<h2>Why<span class="drop-ghosts">?</span></h2>
 
 	<p>Dropserver is a kindred spirit of the "indie web" and "small web" movements, which aims to give internet users the means to control their presence on the web. Dropserver's goal is to give users control over the code they interact with in the cloud.</p>
@@ -145,12 +159,12 @@ import HomePointBox from '../layouts/HomePointBox.astro';
 		<div>
 			<h3>Project Status:</h3>
 			<ul>
-				<li>Read the latest update: 
-					<a href="https://olivierforget.net/blog/2024/dropserver-progress-december-2023/">December 2023</a>.</li>
 				<li>Dropserver is under active development, but it is not yet ready for general use. Some of what you read above is aspirational.</li>
 				<li>A good chunk of functionality is in place and Dropserver is already proving valuable and fun (to its developer at least).</li>
 				<li>If you are a developer who wants to experiment with a self-hosted server please have a look at the
 					<a href="docs">docs</a> to get started.</li>
+				<li>Read the latest update: 
+					<a href="https://olivierforget.net/blog/2024/dropserver-progress-december-2023/">December 2023</a>.</li>
 			</ul>
 		</div>
 	</div>

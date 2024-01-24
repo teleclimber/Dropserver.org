@@ -15,17 +15,30 @@ import ValidVersion from '../../layouts/ValidVersion.vue';
 
 <Note>`ds-host` is for running a full instance of Dropserver. If you just want to run an app locally for development purposes, use [`ds-dev`](ds-dev).</Note>
 
+# Speedrun
+
+- On a Linux host, acquire the [latest version of ds-host](https://github.com/teleclimber/Dropserver/releases/) and [Deno](https://deno.land). Optionally install Bubblewrap "bwrap" from your package manager.
+- Point a domain and its subdomains to your host.
+- Create `/srv/dropserver` and `/var/run/dropserver` with read/write permissions.
+- Create a `config.json` (see below).
+- Run `ds-host -config=/path/to/config.json -migrate`
+- Run `ds-host -config=/path/to/config.json`
+- Look for `setup_key_reveal=` in the terminal output and use that URL to create an admin user.
+- Log in as your admin user and you're good to go.
+
 # Warning ⚠
 
-At this point a good chunk of `ds-host` is functional. You can upload app code, create appspaces, migrate, add users, and use the appspace with other users.
+At this point a good chunk of `ds-host` is functional. You can install apps, create appspaces, migrate, add users, and use the appspace with other users. From experience it can run for months at a time without issues.
 
-However:
+However Dropserver is a big project run by one guy. There may be **security holes**! For the time being, don't use app code you don't trust and don't put it up on the public internet unless it's isolated in a VM and don't put data on there you can't afford to have stolen.
 
-- There are going to be **security holes**. Don't use app code you don't trust. Don't put it up on the public internet unless it's completely isolated in a VM and don't put data on there you can't afford to have stolen
-- There are some memory and goroutine leaks
+While we're setting expectations:
+
 - Some functionality is missing or half-baked
 - APIs that the apps use are going to change a few times before they become stable
 - The config file schema may change too
+
+And now, let's dive in.
 
 # Install ds-host 
 
@@ -237,8 +250,6 @@ Finally, you can start `ds-host` directly:
 $ ds-host -config=/etc/dropserver.json
 ```
 
-<Note>The first time you run `ds-host` the system will detect that there is no admin user and it will create a secret link where you can register as an admin. The link is printed in the log output, which is also echoed to your terminal if you run `ds-host` as above. Look for `setup_key_reveal=` and use the link to create an account.</Note>
-
 ## Run with Systemd
 
 In practice it's easier to have systemd run `ds-host`. This is particularly true if you have configured resource limits of appspace sandboxes using cgroups.
@@ -285,6 +296,12 @@ Tail the logs using:
 ```
 $ journalctl -u dropserver.service -f
 ```
+
+## Create the Admin User
+
+The first time you run `ds-host` the system will detect that there is no admin user and it will create a secret link where you can register as an admin. The link is printed in the log output.
+
+Look for `setup_key_reveal=` and use the link to create an account.
 
 ## Log In
 
