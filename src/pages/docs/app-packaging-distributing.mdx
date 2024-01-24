@@ -9,11 +9,9 @@ import Note from '../../layouts/Note.astro';
 
 # Packaging and Distributing Apps
 
-<ValidVersion from="0.12.0"></ValidVersion>
+<ValidVersion from="0.13.0"></ValidVersion>
 
 Packaging your apps empower other users to install and run them on their own Dropserver instance with minimal effort. A package contains an archive of the application files and assets, and a manifest describing the app.
-
-<Note>This page is a incomplete. App packaging was done in version 0.11, but more work is needed to make distribution and installation convenient.</Note>
 
 ## Prepare Your App
 
@@ -74,9 +72,9 @@ The directory passed to `-create-package` is where the package file and manifest
 
 The `-package-name` is the base file name of the package. `ds-dev` will append the version (as specified in the manifest) and the tar.gz extension. In this case: `my-super-app-0.1.0.tar.gz`.
 
-`ds-dev` will also output a complete manifest alongside the package with extension `.json`. This is a convenience and will be used in the future as part of the distribution mechanism.
+`ds-dev` will also output a complete manifest alongside the package with extension `.json`, as well as a `.txt` changelog file containing the changes for just the current version, and an app icon. These files get used by the application distribution website generation process (see below).
 
-### Use Your Packaged App
+#### Use your packaged app
 
 Once a package is created you can use it via `ds-dev`:
 
@@ -84,6 +82,77 @@ Once a package is created you can use it via `ds-dev`:
 ds-dev -app=my-super-app-0.1.0.tar.gz
 ```
 
-You can also upload it to your `ds-host` instance via the user interface. If you don't have a ds-host instance, you can spin one up temporarily via [Docker](ds-host-docker).
+Upload the packaged app to your `ds-host` instance via the user interface. You can then create appspaces for this app. If you don't have a ds-host instance, you can spin one up temporarily via [Docker](ds-host-docker).
 
+## Distribute Your App
 
+Distributing your app means making it very easy to install for other users. In Dropserver a user can install an app by pasting a URL that points to a special JSON file called an "app listing" that contains the list of available versions of an app.
+
+`ds-dev` can generate this "app listing" just by looking at a directory of packaged apps. to generate the listing run:
+
+```
+$ ds-dev -create-listing=/path/to/packages/dir/
+```
+
+This creates `app-listing.json` and an `index.html` files alongside the  package files. The listing looks like this:
+
+```json
+{
+  "versions": {
+    "0.6.1": {
+      "manifest": "my-super-app-0.6.1.json",
+      "package": "my-super-app-0.6.1.tar.gz"
+    },
+    "0.6.2": {
+      "manifest": "my-super-app-0.6.2.json",
+      "package": "my-super-app-0.6.2.tar.gz",
+      "changelog": "my-super-app-0.6.2-changes.txt",
+      "icon": "my-super-app-icon-4226f914.png"
+    }
+  }
+}
+```
+
+Each value of `package` `manifest` `changelog` and `icon` are paths.
+
+The HTML file is a minimal self-contained web page that echoes some of the information about your app for human consumption. It also includes the listing URL and invites users to install your app in their own Dropserver instance.
+
+The generated files are intended to be served together. Simply upload the whole directory to a static host and you're good to go.
+
+<Note>Dropserver will not follow redirects when fetching the app listing and other files from your website. Also, it will only fetch app listings and app files over HTTPS.</Note>
+
+### Release a new version of your app
+
+Thanks to the "app-listing" users will be able to install the latest version of your app soon after you publish. To ensure this process works well please ensure the following:
+
+- Increment the version of the app regardless of how small the change is. If you do not change the version your existing users will not get the latest changes. Version changes should be in accordance with the semver specification.
+- Add an appropriate entry to the changelog.
+- Remember to rebuild all assets and run all tests before creating the new version package.
+- Create package files for the new version using the same `-package-name` as before, and output the files alongside the older versions.
+- Run the `-create-listing` command again. The `app-listing.json` and `index.html` files will be overwritten.
+- Upload or sync all files to your static site server. Make sure the URL for `app-listing.json` doesn't change!
+
+Dropserver instances that have your app installed from this URL will eventually pick up on the new version and suggest its installation to your users.
+
+### Move your published app to a new URL
+
+If you move the published site to a new address, users who installed your app using the previous address will no longer get updates. To give these users a better experience, let them know what the new address is. You can do this in one of two ways:
+
+- Set up your static site to return a status of `301 Moved Permanently` or `308 Permanent Redirect` and a `Location` header with the new URL when requesting `app-listing.json`.
+- Change the `app-listing.json` at the old URL to include the `new-url` field that points to the new URL:
+
+```json
+{
+    "new-url": "https://<the new URL for your app>"
+}
+```
+
+In both cases the new URL should point to the new URL for `app-listing.json`.
+
+With either of these changes Dropserver will invite users to update the link for the app.
+
+## What Next?
+
+- Build a hello world app in this [tutorial](/docs/build-dropserver-app-tutorial).
+- Report any problems with `ds-dev` in [github issues](https://github.com/teleclimber/Dropserver/issues).
+- Question or comment? Find me, the developer, on [Mastodon](https://social.tchncs.de/web/getting-started) or on [my site](https://olivierforget.net).

@@ -44,6 +44,12 @@ External access values specify how your instance will be reachable from beyond y
 
 `external-access.port`: The port to use to connect. Defaults to 443.
 
+### Local Network
+
+By default Dropserver prevents access to non-public IPs when it fetches remote app listings and package files from the internet. If you want your Dropserver instance to be able to access local IPs, add them here.
+
+`local-network.allowed-ips`: Array of IPs or CIDR ranges that should be allowed. Example: `["192.168.10.9", "10.10.0.0/24"]`.
+
 ### Manage TLS Certificates
 
 `ds-host` can automatically obtain TLS certificates for you by interacting with an [ACME](https://en.wikipedia.org/wiki/Automatic_Certificate_Management_Environment) server. To use this feature, set `enable` to true and enter an `acme-account-email`.

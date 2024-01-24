@@ -27,9 +27,9 @@ Get the `ds-dev` executable from the [Dropserver releases](https://github.com/te
 
 <Note>Dropserver uses Deno as its sandbox, therefore `ds-dev` requires [Deno](https://deno.land) to be installed and available on the path.</Note>
 
-## Running ds-dev
+## Running A Dropserver App in ds-dev
 
-To run `ds-dev` you point it to the directory of the app that you are developing:
+To run an app you are developing in `ds-dev` you point it to the directory of the app's source:
 
 ```
 $ ds-dev -app=/path/to/app/dir/
@@ -48,6 +48,15 @@ $ ds-dev -app=/path/to/app/dir/ -appspace=/path/to/appspace/files/
 If you downloaded appspace data from `ds-host` you must unzip it before pointing `ds-dev` to it.
 
 <Note>The appspace data is never modified. `ds-dev` copies all the files from the provided directory into a temporary directory, and uses that as the working data.</Note>
+
+
+#### Run a packaged app
+
+You can also run a packaged app in `ds-dev`. This can be handy if you want to take a quick look at an app that has already been packaged, or if you'd like to test a new version of an app locally:
+
+```
+$ ds-dev -app=/path/to/mysuperapp-1.2.3.tar.gz
+```
 
 ## ds-dev UI Basics
 
@@ -121,6 +130,44 @@ Click the "Inspect" button to inspect running code. The process is as follows:
 - Open the Chrome browser at `chrome://inspect" and click on the Deno instance (or use another compatible debugger).
 - Open files, set breakpoints, and resume execution to let the sandbox finish starting.
 - When you are done click "Inspect" again.
+
+## Create an App Package
+
+To create a package that can be installed on `ds-host` from the app files run the following command:
+
+```
+$ ds-dev -app=/path/to/app/dir/ -create-package=/path/to/output/dir -package-name=my-super-app
+```
+
+`-package-name` is optional but highly recommended. Generated file names will start with "my-super-app" and will include the version specified in the manifest: `my-super-app-1.2.3.tar.gz` and `my-super-app-1.2.3.json`, etc...
+
+`-create-package` generates the following files:
+
+- the actual `.tar.gz` package file which can be installed on `ds-host`.
+- a `.json` manifest file that includes metadata extracted by running the app before packaging.
+- an icon file, copied from the application icon specified in the manifest. The saved filename consists of a hash of the contents of the file.
+- a `.txt` file that contains the changelog for the current version only.
+
+The package file can be installed manually on a Dropserver instance. The last three files are used when creating the distribution site.
+
+## Create an App Distribution Site
+
+To create app distribution website files, run this command:
+
+```
+$ ds-dev -create-listing=/path/to/packages/dir/
+```
+
+Where `/path/to/packages/dir/` is the directory where you generated the package files.
+
+Optional arguments are:
+
+- `-base-url` sets the base URL in the app listing. This is normally not necessary.
+- `-html-template` is the path to a [mustache](https://mustache.github.io/) template to use instead of the default. The original template is in the [Dropserver repository](https://github.com/teleclimber/Dropserver) at `/cmd/ds-dev/distsite/index.html`.
+
+This command will generate `app-listing.json` alongside the package files. It contains a list of versions and the filenames for the package, manifest, changelog, and app icon. It also generates an HTML file that presents your application to a potential visitor, along with installation instructions.
+
+After uploading all the files in `/path/to/packages/dir/` to a static site server, any Dropserver user can install your app and keep it updated. See [App Packaging and Distribution](/docs/app-packaging-distributing).
 
 ## What Next?
 
