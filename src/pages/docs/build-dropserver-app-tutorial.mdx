@@ -3,9 +3,12 @@ title: "Tutorial: \"Hello World\" Dropserver Application"
 layout: ../../layouts/DocsPageLayout.astro
 ---
 
+import ValidVersion from '../../layouts/ValidVersion.vue';
 import Note from '../../layouts/Note.astro';
 
 # Tutorial: Build a Dropserver Application
+
+<ValidVersion from="0.13.1"></ValidVersion>
 
 Let's build a [Dropserver](/) App! We'll go step by step to introduce concepts slowly.
 
@@ -231,11 +234,11 @@ import {
 const m = new MigrationsBuilder;
 // create a migration from schema 0 to 1:
 m.upTo(1, async() => {
-	await Deno.create(app.appspacePath('visitors.txt'));
+	await Deno.create('visitors.txt');
 });
 // It's a good idea to add a down migration that reverses the changes if possible
 m.downFrom(1, async() => {
-	await Deno.remove(app.appspacePath('visitors.txt'));
+	await Deno.remove('visitors.txt');
 });
 ```
 
@@ -263,13 +266,13 @@ async function helloWorld(ctx:Context) {
 	if( !ctx.proxyId ) throw new Error("Expected an authenticated user");
 
 	// first read file to get past visitors:
-	const visitors = await Deno.readTextFile(app.appspacePath('visitors.txt'));
+	const visitors = await Deno.readTextFile('visitors.txt');
 
 	const user = await app.getUser(ctx.proxyId);
 
 	// append visitor name to file:
 	await Deno.writeFile(
-		app.appspacePath('visitors.txt'),
+		'visitors.txt',
 		new TextEncoder().encode(user.displayName+'\n'),
 		{append:true});
 

@@ -9,7 +9,7 @@ import Note from '../../layouts/Note.astro';
 
 # Building A Dropserver App
 
-<ValidVersion from="0.11.0"></ValidVersion>
+<ValidVersion from="0.13.1"></ValidVersion>
 
 This page gives a high level overview of how a Dropserver app is built. See the [tutorial](build-dropserver-app-tutorial) for a hands-on example.
 
@@ -62,7 +62,9 @@ Your app will always run in a sandbox therefore it will not have access to just 
 - `@appspace` Read-write. This is where the appspace gets to store its data files.
 - `@avatars` Read-only. A special place for getting avatars for users.
 
-To actually operate in any of these areas, you must first get the actual directory path by calling the appropriate method on your app instance, such as `app.appspacePath()`. You should call this every time you need it because it may change if the appspace gets moved around.
+The "current working directory" of the sandbox is the appspace files directory. To access a file in the appspace directory simply refer to it with a relative path: `somePath/someFile.txt`.
+
+To operate in any of the other areas,` you must first get the actual directory path by calling the appropriate method on your app instance, such as `app.appPath()`. You should call this every time you need it because it may change if the app gets upgraded or appspace gets moved around.
 
 #### Users
 
