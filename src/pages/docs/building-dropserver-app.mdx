@@ -106,7 +106,15 @@ Dropserver apps can not make outbound requests (meaning they can not initiate co
 
 ## Frontend and clients
 
-You are free to build any frontend you like for your Dropserver app. Here are some examples:
+You are free to build any frontend you like for your Dropserver app.
+
+### Strict Content Security Policy
+
+One caveat to keep in mind is that all responses from a Dropserver appspace have a strict [Content Security Policy](https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP)! The policy in the current version of Dropserver is: `default-src: 'self'`. 
+
+<Note>This strict CSP even prevents inline styles and a `<style>` tags from working in your HTML. [I'm contemplating loosening the CSP](https://github.com/teleclimber/Dropserver/issues/124) to allow this. Please comment if you feel strongly one way or another.</Note>
+
+### Example frontend and clients:
 
 #### Generate HTML server-side
 
@@ -114,18 +122,16 @@ Generate HTML server-side using a template language of your choice and serve CSS
 
 #### Progressive Web App
 
-Create a PWA Single-Page Application that is built when packaging the app and served statically. See the [Leftovers](https://github.com/teleclimber/Leftovers) code for an example PWA SPA using Vue.
+Create a PWA Single-Page Application that is built when packaging the app and served statically. See the [Leftovers](https://leftovers.olivierforget.net) code for an example PWA SPA using Vue.
 
-This is a great of providing near-native app experience without dealing with app stores.
-
-<Note>Be aware that Dropserver serves files with a strict [Content Security Policy](https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP) of `default-src: 'self'`.</Note>
+This is a great way of providing near-native app experience without dealing with app stores.
 
 #### Native app
 
-Create a native app for your target environment (smartphone, desktop OS, or CLI) and interact with your app via a JSON API. Your native app would be packaged and distributed separately and would include a way to specify the appspace domain.
+Create a native app for your target environment (smartphone, desktop OS, or CLI) and interact with your app via a JSON API. Your native app would be packaged and distributed separately and should include a way to specify the appspace domain.
 
 Note: authentication of appspace users from a native app has not been developed yet.
 
 #### Server-Side Rendered 🤔
 
-An SSR app may work as a Dropserver application, but it's untested. First your SSR coded has to run in Deno, while most assume Node. Second, routing may be an issue. 
+An SSR app may work as a Dropserver application, but it's untested. First your SSR code has to run in Deno, while most assume Node. Second, routing may be an issue.
