@@ -52,7 +52,10 @@ You do not create a server in a Dropserver app. The server is run by Dropserver.
 
 #### Different route types
 
-When declaring routes, you can specify a route type. Currently there are just two route types: regular callback (which calls a function in the sandbox to respond to a request) and static file handler (which serves files from `@app`, `@appspace` or other valid directory).
+When declaring routes, you can specify a route type. Currently there are just two route types: 
+
+- regular callback (which calls a function in the sandbox to respond to a request)
+- static file handler (which serves files from `@app`, `@appspace` or other valid directory).
 
 #### Local file access
 
@@ -74,27 +77,25 @@ A "proxy-id" is a string that uniquely identifies a user in your appspace. Your 
 
 ### Backend Code Caveats
 
-#### 🚫 localStorage and sessionStorage
+#### localStorage ⚠️
 
-Do not store data using `localStorage` / `sessionStorage` from the backend code. [Deno stores that data](https://deno.land/manual@v1.35.1/runtime/web_storage_api#web-storage-api) at a location that is different from the appspace data files, as a result it will not be in appspace backups, and may be lost at any point. See this [issue](https://github.com/teleclimber/Dropserver/issues/54).
+Data stored in `localStorage` from the backend code may disappear. [Deno stores that data](https://deno.land/manual/runtime/web_storage_api#web-storage-api) at a location that is different from the appspace data files, as a result it will not be in appspace backups. The data may also disappear if the directory structure of the instance changes, or if bubblewrap is enabled or disabled. See this [issue](https://github.com/teleclimber/Dropserver/issues/54).
 
-Note: this is strictly about backend code. Feel free to use [localStorage and sessionStorage](https://developer.mozilla.org/en-US/docs/Web/API/Web_Storage_API) in your frontend. 
+<Note>This is strictly about backend code. Feel free to use [localStorage](https://developer.mozilla.org/en-US/docs/Web/API/Web_Storage_API) in your frontend.</Note>
 
 #### Specify a file for Deno Key-Value DB
 
 Similarly to the above, do not use [Deno KV](https://deno.land/manual/runtime/kv) store *without* specifying a file path. When used in that manner, Deno stashes the data in the same obscure location as session and local storage, and it may be lost.
 
-#### Your app code will exit
+Open a KV by specifying a path in your appspace data directory, like this:
 
-Assume your code will exit between requests. Any data not stored in the appspace directory may be lost as soon as you are done sending a response to a request.
+```js
+const kv = await Deno.openKv(app.appspacePath("kv.db"));
+```
 
-#### 🚫 Import map
+#### No Deno.json and import map 🚫
 
-Do not use a Deno [import map](https://deno.land/manual/basics/import_maps#import-maps). For now Dropserver uses import maps internally, and does not currently attempt to merge any other import maps.
-
-#### 🚫 Deno.json
-
-Do not use a [`deno.json`file](https://docs.deno.com/runtime/manual/getting_started/configuration_file).
+Do not use a [`deno.json`file](https://docs.deno.com/runtime/manual/getting_started/configuration_file).  or an [import map](https://deno.land/manual/basics/import_maps#import-maps). For now Dropserver uses import maps internally, and does not currently attempt to merge any other import maps.
 
 <Note>Proper handling for import maps and `deno.json` by Dropserver is on the roadmap.</Note>
 
@@ -104,11 +105,15 @@ If no sandbox is running when a request is received, `ds-host` must start one an
 
 If you do need to depend on a large library for some operations, consider loading asynchronously on an as-needed basis.
 
-#### 🚫 No outbound requests
+#### Your app code will exit
+
+Assume your code will exit between requests. Any data not stored in the appspace directory may be lost as soon as you are done sending a response to a request.
+
+#### No outbound requests 🚫
 
 Dropserver apps can not make outbound requests (meaning they can not initiate contact with other servers).
 
-<Note>This is a temporary restriction that will be lifted as soon as an adequate permission model is written.</Note>
+<Note>This is a temporary restriction that will be lifted as soon as an adequate permission model is written. See this [blog post](https://olivierforget.net/blog/2024/dropserver-net-requests/) for the gory details.</Note>
 
 ## Frontend and clients
 
