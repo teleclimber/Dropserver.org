@@ -64,7 +64,7 @@ Your app will always run in a sandbox therefore it will not have access to just 
 
 The "current working directory" of the sandbox is the appspace files directory. To access a file in the appspace directory simply refer to it with a relative path: `somePath/someFile.txt`.
 
-To operate in any of the other areas,` you must first get the actual directory path by calling the appropriate method on your app instance, such as `app.appPath()`. You should call this every time you need it because it may change if the app gets upgraded or appspace gets moved around.
+To operate in any of the other areas, you must first get the actual directory path by calling the appropriate method on your app instance, such as `app.appPath()`. You should call this every time you need it because it may change if the app gets upgraded or appspace gets moved around.
 
 #### Users
 
@@ -90,7 +90,13 @@ Assume your code will exit between requests. Any data not stored in the appspace
 
 #### 🚫 Import map
 
-Do not use a Deno [import map](https://deno.land/manual@v1.35.1/basics/import_maps#import-maps). For now Dropserver uses import maps internally, and does not currently attempt to merge any other import maps.
+Do not use a Deno [import map](https://deno.land/manual/basics/import_maps#import-maps). For now Dropserver uses import maps internally, and does not currently attempt to merge any other import maps.
+
+#### 🚫 Deno.json
+
+Do not use a [`deno.json`file](https://docs.deno.com/runtime/manual/getting_started/configuration_file).
+
+<Note>Proper handling for import maps and `deno.json` by Dropserver is on the roadmap.</Note>
 
 #### Keep it lean
 
