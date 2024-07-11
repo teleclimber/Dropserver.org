@@ -102,7 +102,7 @@ import HomePointBox from '../layouts/HomePointBox.astro';
 	<h1>An Application Platform for Your Personal Web Services</h1>
 	<p>Dropserver is an open source server for hosting a multitude of small web-based applications.</p>
 	<p>With Dropserver the goal is not to scale your application to many users, but to allow each user to run their own applications at a small scale. Dropserver is designed to host multiple different applications just for you, your family, your club, or your small business.</p>
-	<p>You can run your own Dropserver instance for you and your friends, or (hopefully in the future) you will be able to sign up for a commercial host for a few dollars per month.</p>
+	<p>You can run your own Dropserver instance for you and your friends, or (hopefully in the future) it will be possible for even non-technical people to install and use their own instance.</p>
 	<p>Once you have a Dropserver, installing an application takes a few clicks and "just works".</p>
 
 	<p class="cta">
@@ -159,20 +159,28 @@ import HomePointBox from '../layouts/HomePointBox.astro';
 		<div>
 			<h3>Project Status:</h3>
 			<ul>
-				<li>Dropserver is under active development, but it is not yet ready for general use. Some of what you read above is aspirational.</li>
-				<li>A good chunk of functionality is in place and Dropserver is already proving valuable and fun (to its developer at least).</li>
-				<li>If you are a developer who wants to experiment with a self-hosted server please have a look at the
+				<li>Dropserver is under active development!</li>
+				<li>A lot of functionality is in place and Dropserver is already proving valuable and fun.</li>
+				<li>The goal of making Dropserver installable and usable by non-technical people is a long ways off.</li>
+				<li>If you are a developer or technically inclined person who wants to experiment with a self-hosted server please have a look at the
 					<a href="docs">docs</a> to get started.</li>
 				<li>Read the latest update: 
-					<a href="https://olivierforget.net/blog/2024/dropserver-progress-april-2024/">April 2024</a>.</li>
+					<a href="https://olivierforget.net/blog/2024/dropserver-progress-june-2024/">June 2024</a>.</li>
 			</ul>
 		</div>
 	</div>
 
 	<h2>Apps<span class="drop-ghosts">?</span></h2>
 	<p>While there are a handful of apps for Dropserver, the first adopters will likely be people who want to build an app to scratch their own itch.</p>
-	<p>Luckily one of the goals of Dropserver is that it should be as easy as possible to create the backend of an app. Dropserver provides user management, authentication, file storage and serving of static assets, TLS, data migration hooks, and more... so all you have to code is your application logic.</p>
-	<p>For example the backend for this 
+	<p>A goal of Dropserver is to make it as easy as possible to create the backend of an app. To this end, Dropserver provides:</p>
+	<ul>
+		<li>User management (with avatars) and authentication.</li>
+		<li>Private routes and publicly accessible ones.</li>
+		<li>File storage and serving of static assets.</li>
+		<li>Data migration hooks, and app data backup and import.</li>
+		<li>A local <a href="/docs/ds-dev">development environment</a>.</li>
+	</ul>
+	<p>All you have to code is your application logic. For example the backend for this 
 		<a href="https://olivierforget.net/blog/2022/secret-santa-dropserver-app/">Secret Santa app</a> is a <strong>single TypeScript file, 120 lines long!</strong></p>
 	<p>With that, here are some ideas of what you might build for Dropserver:</p>
 	<ul>
