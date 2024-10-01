@@ -76,22 +76,22 @@ The `-package-name` is the base file name of the package. `ds-dev` will append t
 
 #### Use your packaged app
 
-Once a package is created you can use it via `ds-dev`:
+Once a package is created you can check that it works correctly by running it in `ds-dev`:
 
 ```
 ds-dev -app=my-super-app-0.1.0.tar.gz
 ```
 
-Upload the packaged app to your `ds-host` instance via the user interface. You can then create appspaces for this app. If you don't have a ds-host instance, you can spin one up temporarily via [Docker](ds-host-docker).
+To run it "in production", upload the packaged app to your `ds-host` instance via the user interface. You can then create appspaces for this app.
 
 ## Distribute Your App
 
-Distributing your app means making it very easy to install for other users. In Dropserver a user can install an app by pasting a URL that points to a special JSON file called an "app listing" that contains the list of available versions of an app.
+Dropserver can install apps by fetching files from a static website. Distributing your app means generating these files and pushing them to a host.
 
-`ds-dev` can generate this "app listing" just by looking at a directory of packaged apps. to generate the listing run:
+`ds-dev` can generate the necessary files by looking at your directory of packaged app versions (the directory you used for `-create-package`). To generate the listing run:
 
 ```
-$ ds-dev -create-listing=/path/to/packages/dir/
+$ ds-dev -create-listing=/path/to/packaged/versions/
 ```
 
 This creates `app-listing.json` and an `index.html` files alongside the  package files. The listing looks like this:
@@ -113,7 +113,7 @@ This creates `app-listing.json` and an `index.html` files alongside the  package
 }
 ```
 
-Each value of `package` `manifest` `changelog` and `icon` are paths.
+Each value of `package`, `manifest`, `changelog`, and `icon` are paths.
 
 The HTML file is a minimal self-contained web page that echoes some of the information about your app for human consumption. It also includes the listing URL and invites users to install your app in their own Dropserver instance.
 
