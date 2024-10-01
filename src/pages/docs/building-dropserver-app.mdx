@@ -40,6 +40,15 @@ This "entrypoint" file should import `createApp` from a pinned version of the [`
 
 <Note>The [dropserver_app](https://deno.land/x/dropserver_app) library makes it convenient to write a Dropserver app without knowing its ever-changing internals.</Note>
 
+### Deno 2 Support
+
+Dropserver can work with Deno 1 or Deno 2. To support Deno 2:
+
+- Use `ds-host` and `ds-dev` version 0.13.3 or higher.
+- Use `dropserver_app` version 0.2.2 or higher.
+
+Naturally your own code must run under Deno 2.
+
 ### Backend Basics
 
 Below are some aspects of writing a Dropserver application that differ from other code you may have written before. It's a high level overview. For specifics refer to the [tutorial](build-dropserver-app-tutorial) and the [dropserver_app docs](https://deno.land/x/dropserver_app).
@@ -117,7 +126,7 @@ Dropserver apps can not make outbound requests (meaning they can not initiate co
 
 ## Frontend and clients
 
-You are free to build any frontend you like for your Dropserver app.
+You are free to build any frontend you like for your Dropserver app. From server-side HTML to PWA SPA to a native app, anything is possible so long as it makes HTTP requests to the backend.
 
 ### Strict Content Security Policy
 
