@@ -65,9 +65,7 @@ Dropserver currently uses [Deno](https://deno.land) as its application code sand
 
 Deno is a "Secure Runtime for JavaScript and Typescript". Unlike node which allows JS scripts access to a very large swath of calls to the underlying operating system, Deno stands in the way of each and every call to the OS. A Deno user can run untrusted code while limiting what that code can do.
 
-In addition to Deno, Dropserver leverages the underlying operating system's process monitoring and control system ("cgroups" in Linux) to restrict computing and storage resources (roadmap feature).
-
-Finally it is likely that in real-world use the sandbox is wrapped in another layer of security, likely a virtual machine such as Firecracker to limit the damage of a zero-day exploit. (roadmap feature)
+If available, Dropserver can also leverage the operating system's sandbox to prevent unwanted activity or resource consumption. Read about [Dropserver's use of Bubblewrap on Linux](https://olivierforget.net/blog/2023/dropserver-sandbox/) for example.
 
 Regardless of how the code is sandboxed, the running application will be restricted in the following ways:
 
@@ -81,9 +79,7 @@ While an Application can technically destroy its own data, the consequences of t
 
 ### Outgoing Network Connections
 
-Appspaces must be granted the right to make network requests from the server. The calls are only allowed if the destination matches a whitelist.
-
-At Appspace creation time the Application suggests a list of urls to whitelist, which the user can examine and alter. Additions to the whitelist at runtime are possible and require user approval (roadmap feature).
+Appspaces must be granted the right to make network requests from the server. The calls are only allowed if the destination matches a whitelist. (This is a roadmap feature, read about the [challenges here](https://olivierforget.net/blog/2024/dropserver-net-requests/).)
 
 Dropserver also attempts to protect users against unwanted outgoing network connections from the browser side. It does so by adding restrictive headers to HTTP responses (in particular a very strict CSP and no CORS). Most modern browsers respect these headers.
 

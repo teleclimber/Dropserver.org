@@ -148,14 +148,6 @@ In addition, there is a concept of permissions: apps can specify permissions tha
 
 In addition to responding to http requests app functions can be called in a [cron](https://en.wikipedia.org/wiki/Cron)-like fashion. (Roadmap feature.)
 
-### Dropserver API Version
-
-All touch points between Dropserver and external code and data (apps, appspace data, etc..) are considered part of the Dropserver API. This API is versioned. When future versions of DS are released with changing APIs, the version will be incremented.
-
-Incrementing the DS API version does not mean that the earlier versions are no longer supported. The goal is to continue to maintain the older APIs at their original version as much as possible.
-
-This should enable people to upgrade to the latest version of DS without abandoning their old, outdated apps.
-
 ### Resource Utilization
 
 Resources used by each appspace are tracked, including CPU time, disk usage, memory used when running, etc...
