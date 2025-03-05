@@ -3,6 +3,14 @@ import HomeLayout from '../layouts/HomeLayout.astro';
 import HomePointBox from '../layouts/HomePointBox.astro';
 ---
 
+<style is:global>
+	header, article, nav {
+		max-width: var(--max-width);
+		margin-left: auto;
+		margin-right: auto;
+		padding: 0 0.5rem;
+	}
+</style>
 <style>
 	.cta {
 		border: 1px dashed rgb(228, 228, 0);

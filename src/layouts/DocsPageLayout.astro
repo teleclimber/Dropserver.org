@@ -2,23 +2,83 @@
 	import BaseLayout from './BaseLayout.astro';
 ---
 <style>
-nav {
-	
+label {
+	cursor: pointer;
 }
-nav > svg {
-	width: 1.3rem;
-	height: 1.3rem;
-	vertical-align: text-bottom;
+ds-docs-page {
+	--ds-header-height: 4rem;
+	--ds-sidebar-width: 19rem;
+	--ds-hamburger-display: none;
+	display: flex;
+	flex-direction: column;
+	align-items: stretch;
+}
+docs-page-sidebar {
+	position: fixed;
+	inset-block: var(--ds-header-height) 0;	
+	inset-inline-start: 0;
+	width: var(--ds-sidebar-width);
+	overflow-y: auto;
+}
+@media (width < 800px) {
+	ds-docs-page {
+		--ds-sidebar-width: 0;
+		--ds-hamburger-display: flex;
+	}
+	docs-page-sidebar {
+		width:auto;
+		display: none;
+	}
+}
+ds-docs-page:has(#ds-show-nav-input:checked) docs-page-sidebar {
+	display: block;
+	background-color: white;
+}
+header {
+	box-sizing: border-box;
+	position: fixed;
+	inset-inline-start: 0;
+  	inset-block-start: 0;
+	width: 100%;
+	height: var(--ds-header-height);
+	background-color: white;
+	padding: 1rem;
+}
+header-left {
+	display: flex;
+}
+header-left label {
+	display: var(--ds-hamburger-display);
+}
+header-left svg {
+	margin-right: 1rem;
+	width: 2rem;
+}
+header-left input {
+	display: none;
+}
+docs-page-sidebar label {
+	display:var(--ds-hamburger-display);
+	position: fixed;
+	top: calc(1rem + var(--ds-header-height));
+	right: 1rem;
+}
+docs-page-sidebar label svg {
+	width: 2rem;
 }
 nav > a {
 	padding-right: 1rem;
 	white-space: nowrap;
 }
+article {
+	padding-block-start: var(--ds-header-height);
+	padding-inline-start: var(--ds-sidebar-width);
+}
 </style>
 
 <style is:global>
 p > img {
-	max-width: 600px;
+	max-width: 100%;
 	display: block;
 	margin: 0 auto;
 }
@@ -26,23 +86,70 @@ p > img {
 </style>
 
 <BaseLayout title="title">
-	<header>
-		<h1 class="dropserver-logo">
-			<a href="/">dr<span class="drop-o">o</span>p<span class="s">server</span></a>
-		</h1>
-		<span>
-			<a href="https://github.com/teleclimber/Dropserver">Github</a>
-		</span>
-	</header>
+	<ds-docs-page>
+		<header>
+			<header-left>
+				<!--hamburger svg -->
+				<label for="ds-show-nav-input">
+					<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+						<path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+					</svg>
+				</label>
+				<h1 class="dropserver-logo">
+					<a href="/">dr<span class="drop-o">o</span>p<span class="s">server</span></a>
+				</h1>
+				<input type="checkbox" id="ds-show-nav-input" />
+			</header-left>
+			<span>
+				<a href="https://github.com/teleclimber/Dropserver">Github</a>
+			</span>
+		</header>
+		<docs-page-sidebar>
+			<label for="ds-show-nav-input">
+				<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+					<path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+				</svg>
+			</label>
+			<nav>
+				<ul>
+					<li>
+						<h4>Understand Dropserver</h4>
+						<ul>
+							<li><a href="/docs/application-model">Application Model</a></li>
+							<li><a href="/docs/security-model">Security Model</a></li>
+							<li>Users and Logins (coming later)</li>
+						</ul>
+					</li>
+					<li>
+						<h4 id="build-apps-for-dropserver">Build Apps for Dropserver</h4>
+						<ul>
+							<li><a href="/docs/build-dropserver-app-tutorial">Tutorial: “Hello World” Dropserver App</a></li>
+							<li><a href="/docs/building-dropserver-app">Build A Dropserver App</a></li>
+							<li><a href="/docs/ds-dev">Use ds-dev to Develop an App</a></li>
+							<li><a href="/docs/app-packaging-distributing">Package And Distribute Your App</a></li>
+							<li><a href="/docs/app-manifest-ref">App Manifest Reference</a></li>
+						</ul>
+					</li>
+					<li>
+						<h4 id="run-dropserver">Run Dropserver</h4>
+						<ul>
+							<li><a href="/docs/ds-host">Manually Install and Run ds-host</a></li>
+							<li><a href="/docs/ds-host-config-ref">Configuration Reference for ds-host</a></li>
+						</ul>
+					</li>
+					<li>
+						<h4 id="apps">Apps</h4>
+						<ul>
+							<li><a href="https://leftovers.olivierforget.net/app/">Leftovers</a>: Keep track of leftovers in your refrigerator</li>
+							<li><a href="https://shoppinglist.olivierforget.net/">ShoppingList</a>: A shopping list app with stock tracking</li>
+						</ul>
+					</li>
+				</ul>
+			</nav>
+		</docs-page-sidebar>
 
-	<nav>
-		<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-			<path fill-rule="evenodd" d="M15.707 15.707a1 1 0 01-1.414 0l-5-5a1 1 0 010-1.414l5-5a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 010 1.414zm-6 0a1 1 0 01-1.414 0l-5-5a1 1 0 010-1.414l5-5a1 1 0 011.414 1.414L5.414 10l4.293 4.293a1 1 0 010 1.414z" clip-rule="evenodd" />
-		</svg>
-		 Back to <a href="/docs">documentation</a>
-	</nav>
-
-	<article>
-		<slot />
-	</article>
+		<article>
+			<slot />
+		</article>
+	</ds-docs-page>
 </BaseLayout>

@@ -8,12 +8,6 @@ body {
 	font-size: 1.3em;
 }
 
-header, article, nav {
-	max-width: var(--max-width);
-	margin-left: auto;
-	margin-right: auto;
-	padding: 0 0.5rem;
-}
 ul, ol {
 	padding-left: 2em;
 }
