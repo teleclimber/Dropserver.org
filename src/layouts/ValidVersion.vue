@@ -2,7 +2,6 @@
 h5 {
 	margin: 0 0 5px -35px;
 	text-transform: uppercase;
-	font-size: 1rem;
 	display: inline-block;
 	background-color: rgb(57, 78, 172);
 	color: white;

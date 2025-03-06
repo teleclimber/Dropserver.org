@@ -23,10 +23,10 @@ docs-page-sidebar {
 @media (width < 800px) {
 	ds-docs-page {
 		--ds-sidebar-width: 0;
-		--ds-hamburger-display: flex;
+		--ds-hamburger-display: inline;
 	}
 	docs-page-sidebar {
-		width:auto;
+		width: 100%;
 		display: none;
 	}
 }
@@ -37,25 +37,29 @@ ds-docs-page:has(#ds-show-nav-input:checked) docs-page-sidebar {
 header {
 	box-sizing: border-box;
 	position: fixed;
+	display: grid;
+	grid-template-columns: 1fr auto;
+	gap: 0.7rem;
+	align-items: baseline;
 	inset-inline-start: 0;
   	inset-block-start: 0;
 	width: 100%;
 	height: var(--ds-header-height);
 	background-color: white;
-	padding: 1rem;
+	padding: 0.3rem 1rem;
 }
-header-left {
-	display: flex;
+header h1 {
+	margin: 0;
+	display: inline;
 }
-header-left label {
+header label {
 	display: var(--ds-hamburger-display);
 }
-header-left svg {
-	margin-right: 1rem;
+header svg {
 	width: 2rem;
-}
-header-left input {
-	display: none;
+	display:inline;
+	position: relative;
+  	top: 0.5rem;
 }
 docs-page-sidebar label {
 	display:var(--ds-hamburger-display);
@@ -89,8 +93,8 @@ p > img {
 	<ds-docs-page>
 		<header>
 			<header-left>
-				<!--hamburger svg -->
 				<label for="ds-show-nav-input">
+					<!--hamburger svg -->
 					<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
 						<path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
 					</svg>
@@ -98,7 +102,6 @@ p > img {
 				<h1 class="dropserver-logo">
 					<a href="/">dr<span class="drop-o">o</span>p<span class="s">server</span></a>
 				</h1>
-				<input type="checkbox" id="ds-show-nav-input" />
 			</header-left>
 			<span>
 				<a href="https://github.com/teleclimber/Dropserver">Github</a>
@@ -147,6 +150,8 @@ p > img {
 				</ul>
 			</nav>
 		</docs-page-sidebar>
+
+		<input type="checkbox" id="ds-show-nav-input" />
 
 		<article>
 			<slot />

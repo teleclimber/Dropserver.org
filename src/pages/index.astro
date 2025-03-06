@@ -2,15 +2,6 @@
 import HomeLayout from '../layouts/HomeLayout.astro';
 import HomePointBox from '../layouts/HomePointBox.astro';
 ---
-
-<style is:global>
-	header, article, nav {
-		max-width: var(--max-width);
-		margin-left: auto;
-		margin-right: auto;
-		padding: 0 0.5rem;
-	}
-</style>
 <style>
 	.cta {
 		border: 1px dashed rgb(228, 228, 0);
@@ -26,7 +17,7 @@ import HomePointBox from '../layouts/HomePointBox.astro';
 		margin-top: 3rem;
 	}
 	h1 {
-		font-size: 3rem;
+		font-size: 2.5rem;
 		text-align:center;
 	}
 	@media (max-width: 700px) {
@@ -35,7 +26,6 @@ import HomePointBox from '../layouts/HomePointBox.astro';
 		}
 	}
 	h2 {
-		font-size: 3rem;
 		margin-top: 6rem;
 		text-align: center;
 	}

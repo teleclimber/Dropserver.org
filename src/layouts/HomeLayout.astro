@@ -1,7 +1,22 @@
 ---
 	import BaseLayout from './BaseLayout.astro';
 ---
+
+<style is:global>
+header, article, nav {
+	max-width: var(--max-width);
+	margin-left: auto;
+	margin-right: auto;
+	padding: 0 0.5rem;
+}
+</style>
 <style>
+header {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	align-items: baseline;
+}
 .links a {
 	margin-left: 1rem;
 }
