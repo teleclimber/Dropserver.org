@@ -1,14 +1,33 @@
 ---
 	import BaseLayout from './BaseLayout.astro';
 ---
+
+<style is:global>
+	html {
+		font-size: 1.2em;
+	}
+	@media (width < 500px) {
+		html {
+			font-size: 1em;
+		}
+	}
+	footer {
+		background-color: transparent;
+
+	}
+</style>
 <style>
+#ds-show-nav-input {
+	display: none;
+}
 label {
 	cursor: pointer;
 }
 ds-docs-page {
-	--ds-header-height: 4rem;
-	--ds-sidebar-width: 19rem;
+	--ds-header-height: 3.5rem;
+	--ds-sidebar-width: clamp(14rem, 30vw, 19rem);
 	--ds-hamburger-display: none;
+	--content-lat-pad: 0.5rem;
 	display: flex;
 	flex-direction: column;
 	align-items: stretch;
@@ -19,10 +38,11 @@ docs-page-sidebar {
 	inset-inline-start: 0;
 	width: var(--ds-sidebar-width);
 	overflow-y: auto;
+	background-color: var(--background-color);
 }
 @media (width < 800px) {
 	ds-docs-page {
-		--ds-sidebar-width: 0;
+		--ds-sidebar-width: 0px;
 		--ds-hamburger-display: inline;
 	}
 	docs-page-sidebar {
@@ -32,7 +52,6 @@ docs-page-sidebar {
 }
 ds-docs-page:has(#ds-show-nav-input:checked) docs-page-sidebar {
 	display: block;
-	background-color: white;
 }
 header {
 	box-sizing: border-box;
@@ -46,20 +65,26 @@ header {
 	width: 100%;
 	height: var(--ds-header-height);
 	background-color: white;
-	padding: 0.3rem 1rem;
+	padding: 0.6rem var(--content-lat-pad) 0;
 }
 header h1 {
+	font-size: 1.6rem;
 	margin: 0;
 	display: inline;
+}
+header h1 .path {
+	color: #828282;
+	font-size: 1.1rem;
+	text-decoration: none;
 }
 header label {
 	display: var(--ds-hamburger-display);
 }
 header svg {
-	width: 2rem;
+	width: 1.6rem;
 	display:inline;
 	position: relative;
-  	top: 0.5rem;
+  	top: 0.4rem;
 }
 docs-page-sidebar label {
 	display:var(--ds-hamburger-display);
@@ -70,17 +95,36 @@ docs-page-sidebar label {
 docs-page-sidebar label svg {
 	width: 2rem;
 }
-nav > a {
-	padding-right: 1rem;
-	white-space: nowrap;
+nav {
+	font-size: 0.9em;
+	margin-left: var(--content-lat-pad);
+}
+nav ul {
+	list-style-type: none;
+	padding-left: 0;
+}
+nav ul ul li {
+	margin: 0.4rem 0;
+}
+nav ul a {
+	text-decoration: none;
+}
+nav ul a:hover {
+	background-color: white;
 }
 article {
 	padding-block-start: var(--ds-header-height);
-	padding-inline-start: var(--ds-sidebar-width);
+	padding-inline-start: calc(var(--ds-sidebar-width) + var(--content-lat-pad));
+	padding-inline-end: var(--content-lat-pad);
+	box-sizing: content-box;
+	max-width: 34rem;
 }
 </style>
 
 <style is:global>
+article > :first-child {
+	margin-top: 1.5rem;
+}
 p > img {
 	max-width: 100%;
 	display: block;
@@ -101,6 +145,7 @@ p > img {
 				</label>
 				<h1 class="dropserver-logo">
 					<a href="/">dr<span class="drop-o">o</span>p<span class="s">server</span></a>
+					<a href="/docs" class="path">/docs</span>
 				</h1>
 			</header-left>
 			<span>
