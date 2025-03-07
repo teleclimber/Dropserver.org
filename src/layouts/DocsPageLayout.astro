@@ -17,9 +17,6 @@
 	}
 </style>
 <style>
-#ds-show-nav-input {
-	display: none;
-}
 label {
 	cursor: pointer;
 }
@@ -79,12 +76,27 @@ header h1 .path {
 }
 header label {
 	display: var(--ds-hamburger-display);
+	position: relative;
+}
+#ds-show-nav-input {
+	position: absolute;
+	left:0.2rem;
+	top: 0.2rem;
 }
 header svg {
 	width: 1.6rem;
 	display:inline;
 	position: relative;
   	top: 0.4rem;
+	z-index: 2;
+	background-color: white;
+}
+header label:focus-within svg {
+	outline: auto;
+}
+/* https://css-tricks.com/the-focus-visible-trick/ */
+header label:has(:focus:not(:focus-visible)) svg {
+	outline:none;
 }
 docs-page-sidebar label {
 	display:var(--ds-hamburger-display);
@@ -142,6 +154,9 @@ p > img {
 					<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
 						<path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
 					</svg>
+					<input type="checkbox" id="ds-show-nav-input" 
+					aria-label="Toggle navigation" aria-controls="ds-docs-nav"
+					onchange="this.setAttribute('aria-expanded', this.checked)" />
 				</label>
 				<h1 class="dropserver-logo">
 					<a href="/">dr<span class="drop-o">o</span>p<span class="s">server</span></a>
@@ -152,7 +167,7 @@ p > img {
 				<a href="https://github.com/teleclimber/Dropserver">Github</a>
 			</span>
 		</header>
-		<docs-page-sidebar>
+		<docs-page-sidebar id="ds-docs-nav">
 			<label for="ds-show-nav-input">
 				<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
 					<path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
@@ -195,9 +210,6 @@ p > img {
 				</ul>
 			</nav>
 		</docs-page-sidebar>
-
-		<input type="checkbox" id="ds-show-nav-input" />
-
 		<article>
 			<slot />
 		</article>
