@@ -12,8 +12,8 @@ const og_image_url = new URL('/sm-card.jpg', Astro.url);
 			@import "../styles/base-style.css";
 		</style>
         <meta property="og:title" content={ title }>
-        <meta property="og:image" content={ og_image_url }>
-        <meta property="og:url" content={ Astro.url }>
+        <meta property="og:image" content="https://dropserver.org/sm-card.jpg">
+        <meta property="og:url" content={ `https://dropserver.org${Astro.url.pathname}` }>
     </head>
     <body>
 		<slot />
