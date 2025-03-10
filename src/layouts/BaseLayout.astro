@@ -1,5 +1,6 @@
 ---
 const {title} = Astro.props;
+const og_image_url = new URL('/sm-card.jpg', Astro.url);
 ---
 <!DOCTYPE html>
 <html>
@@ -11,7 +12,7 @@ const {title} = Astro.props;
 			@import "../styles/base-style.css";
 		</style>
         <meta property="og:title" content={ title }>
-        <meta property="og:image" content="/sm-card.jpg">
+        <meta property="og:image" content={ og_image_url }>
         <meta property="og:url" content={ Astro.url }>
     </head>
     <body>
