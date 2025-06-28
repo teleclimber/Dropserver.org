@@ -1,0 +1,192 @@
+---
+title: Dropserver Documentation -- Connect using Tailscale
+layout: ../../layouts/DocsPageLayout.astro
+---
+
+import Note from '../../layouts/Note.astro';
+import ValidVersion from '../../layouts/ValidVersion.vue';
+
+## Access ds-host and Appspaces via a Tailscale Tailnet
+
+<ValidVersion from="0.14.0"></ValidVersion>
+
+A [Tailscale](https://tailscale.com) [tailnet]() is a private network that lets you connect your devices to other computers, such as your Dropserver instance, from anywhere without exposing them to the public internet.
+
+Dropserver's Tailscale integration lets you connect your appspaces to a tailnet right from the `ds-host` interface. Once you're all set up it takes seconds to connect a new appspace.
+
+## Why Use Tailscale
+
+Some advantages:
+
+- Securely access your instance and appspaces from anywhere in the world
+- Hide your instance from the public internet: no bots, no crackers, no DDOS.
+- No need to own a domain name
+- No ports to open on your firewall
+- Mo need to get a static IP or dynamic DNS
+- No port forwarding to set up
+- No login name and password necessary to access Dropserver. Never get logged out.
+
+Some things to know:
+
+- You must have the [Tailscale app](https://tailscale.com/download) installed on the device you are connecting from
+- This app might [conflict with other VPN apps](https://tailscale.com/kb/1105/other-vpns) you are running
+- If you hide Dropserver from the public internet, then all DS users must have the Tailscale app running as well or they will have to connect through your local network.
+- Tailscale.com is a for-profit company and its backend code is proprietary.
+
+### Open Source Alternatives
+
+There are open source self-hosted alternatives to Tailscale: [Headscale]() and [Ionscale](). There may be others too. See below for more info on using these.
+
+<Note>The docs below refer to "Tailscale" but largely apply to alternative control planes. Headscale- and Ionscale-specific docs are at the bottom of this page.</Note>
+
+## Dropserver and your Tailnet(s)
+
+Your Dropserver instance (`ds-host`) creates and manages its Tailscale nodes. The computer that `ds-host` is running on does not need to be connected to the tailnet. More to know:
+
+- Each [Appspace](/docs/application-model) is a separate node ("machine") on a tailnet and is created individually
+- The `ds-host` user UI is also served through a separate node on a tailnet
+- Nodes of your instance can be on different tailnets and can even use different control URLs and backplane software.
+- Support for Tailscale [Funnel](https://tailscale.com/kb/1223/funnel) is not implemented yet
+
+### Tailscale Settings
+
+A few things should be set up on the Tailscale (or Ionscale or Headscale) side.
+
+#### Grants (or ACLs) and Tags
+
+Use Tailscale's [access controls](https://tailscale.com/kb/1393/access-control) to grant access to your instance and appspace nodes to members of your tailnet.
+
+<Note>Tailscale lets you define access controls using either "[grants](https://tailscale.com/kb/1324/grants)" or "[ACL](https://tailscale.com/kb/1018/acls)s". ACLs are the original and grants are newer and fancier. Either one can be used, but we'll use grants below.</Note>
+
+If you are new to Tailscale you can paste these grants into the "Access Controls" tab of your Tailscale admin panel:
+
+```
+{
+	"tagOwners": {
+		"tag:dropserver": ["autogroup:member"],
+	},
+	"grants": [
+		{
+			"src": ["autogroup:member", "autogroup:shared"],
+			"dst": ["tag:dropserver"],
+            "ip":  ["80", "443"]
+		},
+    ]
+}
+```
+
+We've created a `tag:dropserver` and specified that any member ("user") of the tailnet can connect with any of our dropserver nodes on ports 80 and 443. We've also said that when a node is shared with an outside user they too can connect.
+
+<Note>This doesn't mean that every user on your tailnet now has unfettered access to your `ds-host` instance. As you'll see below, tailnet users must be associated with `ds-host` (or appspace) users to actually be authorized.</Note>
+
+We'll have to apply the tag `dropserver` to any node we create. This can be done in the Tailscale UI and is most commonly done through an auth key (see below).
+
+If you are a more advanced Tailscale user you can create your own grants and tags to suit your needs. You could create different tags for different appspaces, and manually manage access to each node in your access controls if you wish.
+
+#### MagicDNS and HTTPS
+
+Enable [MagicDNS](https://tailscale.com/kb/1081/magicdns) and [HTTPS](https://tailscale.com/kb/1153/enabling-https) in the Tailscale UI to access nodes via domain names and to avoid getting "insecure site" warnings from your browser.
+
+These are optional but recommended.
+
+## Connect ds-host To a Tailnet
+
+To connect your Dropserver instance to a tailnet, log in to `ds-host` as an admin and click on the user avatar, click "Instance Administration", then click on "Settings" in the sidebar. There you will find a "Tailscale Node" box.
+
+This video covers the steps described below:
+
+<video controls width="80%">
+	<source src="/docs/tailnet/tailnet-ds-host-auth-high.mp4" />
+</video>
+
+#### Using an "Auth Key" (Recommended):
+
+Assuming you've already set up tags and grants on your tailnet, follow these steps:
+
+- Go to Tailscale to create an Auth Key. In the Tailscale UI, go to Settings > Keys, and "Generate Auth Key". Set it it to apply `tag:dropserver` to the nodes.
+- In the `ds-host` interface, in the "Tailnet Node" box click "Create Node".
+- Paste the Auth Key.
+- Click Connect.
+
+After a few seconds, your node should be connected.
+
+#### Muddle through it 🤠🍸
+
+Alternatively, you can do things in any order and get to the same working result as above. The `ds-host` UI will update instantly when you make changes.
+
+If you don't create an Auth Key you will be given a login link to authenticate the node. You may not even need a Tailscale account to get started, you can create one when clicking through the login link.
+
+If you do not set grants you can create them or change them as needed at any time. If you did not associate tags with your node, you can change that from the Tailscale UI as well, and the `ds-host` UI will reflect the changes.
+
+Turn on MagicDNS and HTTPS when you get around to it. `ds-host` will detect this and start serving over HTTPS when it's on.
+
+### Node Management
+
+#### Machine Name
+
+You can change the "[machine name]()" in the Tailscale UI. Feel free to do so if you prefer a different name than what you originally got.
+
+The `ds-host` UI will reflect the new machine name almost instantly.
+
+<Note>The machine name is part of the address for the node, so pick one you like and remember that changing it again will change all URLs for that node.</Note>
+
+#### Connect and Disconnect the Node
+
+Once connected the node will stay connected and reconnect when `ds-host` starts up. Click "Disconnect" to disconnect it, in which case it will stay off until "Connect" is clicked again.
+
+#### Deleting the Node
+
+Deleting a node is a two-part process. The control plane (Tailscale.com) keeps data about the node, and ds-host saves data about the node in the filesystem. If you delete one, you should delete the other.
+
+To delete a node, click "Disconnect" in the `ds-host` UI, then click "delete configuration". Then you can go to the Tailscale UI and delete the node there.
+
+## Associating Users
+
+There are users on your tailnet, and there are `ds-host` users. To let people access your instance via a tailnet, you have to tell `ds-host` which tailnet user corresponds to which `ds-host` user.
+
+After you connect your node to a tailnet, you will see a "Users" section in the UI. Click on "Show users" to reveal the list of tailnet users who have access to this node (per the ACLs / grants). Use the UI to associate a tailnet user with a ds-host user. You can also create a new Dropserver user.
+
+### Share a node with a user on a different tailnet
+
+If you would like to give access to someone who already has a Tailscale account you can simply share the node with them. You can do this from the Tailscale UI. Once they've accepted the invitation they will show up in the list of users you can associate with a ds-host user.
+
+### How users connect to your ds-host instance
+
+Users should have an account with Tailscale. They can be on your tailnet or they can have their own tailnet. They would follow Tailscale's instructions for [setting up their device with the app](https://tailscale.com/kb/1347/installation).
+
+Once all that is done it's just a matter of knowing the address of your ds-host instance. If they don't know it, they can look at the "Tagged Devices" list on the Tailscale app. From there they can copy the address or IP of the `ds-host` instance.
+
+<Note>When connecting to a node for the very first time it can take a few seconds for the connection to succeed. This is mostly due to TLS certs getting created. Once that's done subsequent connections are fast.</Note>
+
+## Connecting an Appspace
+
+So far we've talked about connecting your instance's user and admin side to a tailnet node. But each appspace is a separate node, and must be connected individually.
+
+In the "Manage Appspace" UI in `ds-host` you will find a box called "Tailscale Node". Follow the same procedure to connect an appspace to a tailnet:
+
+- get an auth key from Tailscale.com (make the auth key non-ephemeral if you are connecting multiple appspaces)
+- paste the auth key and click "Connect".
+
+After that you can associate tailnet users with appspace users, or create new appspace users from tailnet users.
+
+## Using Alternative Control Planes
+
+Much of what is said above applies to the open source alternative control planes. There are caveats:
+
+- Grants are new in Tailscale and the open source projects haven't implemented them yet, so use equivalent ACL rules
+- Ionscale and Headscale are not federated. Everything about sharing a node with a user on a different tailnet does not apply.
+
+### Headscale
+
+[Headscale](https://headscale.net/stable/) should work as a tailnet management backplane for `ds-host`, in theory. However there are a couple of issues preventing full use at this point:
+
+- [Peers don't propagate](https://github.com/juanfont/headscale/issues/2375). `ds-host` makes use of the list of peers to associate users. As such, while you can connect to a Headscale node, you can't do much afterwards.
+- [No TLS on serve](https://github.com/juanfont/headscale/issues/1921). Some apps require a [secure context](https://developer.mozilla.org/en-US/docs/Web/Security/Secure_Contexts) to fully function. Without HTTPS, there is no secure context.
+
+Both of these should likely be fixed at some future date, at which point using Headscale with `ds-host` should work fine.
+
+### Ionscale
+
+[Ionscale](https://jsiebens.github.io/ionscale/) should work well. It supports HTTPS on serve (see their [docs on setting up DNS providers](https://jsiebens.github.io/ionscale/configuration/dns-providers/)).
+
+One caveat is that Ionscale requires that you use an [OIDC provider](https://jsiebens.github.io/ionscale/configuration/auth-oidc/) to manage users. Without that, user device nodes are not associated with a user and Dropserver is unable to match the incoming requests with a user.
