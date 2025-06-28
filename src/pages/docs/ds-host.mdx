@@ -56,6 +56,8 @@ Bubblewrap is available from package managers of most distros. `ds-host` should 
 
 If you do not wish to use Bubblewrap set `sandbox.use-bubblewrap` to `false` in your config file. See below for more details.
 
+<Note>On more recent versions of Ubuntu, [apparmor conflicts with Bubblewrap](https://github.com/teleclimber/Dropserver/issues/139). See the links in the issue for workarounds, or turn off bubblewrap in the config, or use an older version of Ubuntu.</Note>
+
 ### Domain Name
 
 Dropserver makes use of subdomains to separate appspaces and the user administration site into different origins. For this reason you need to forward a domain and all its subdomains to your instance.
