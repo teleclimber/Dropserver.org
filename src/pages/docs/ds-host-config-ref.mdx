@@ -72,7 +72,7 @@ This section specifies how `ds-host` should manage sandboxes for running apps. C
 
 `sandbox.sockets-dir`: The absolute path of the directory dedicated to dropserver sockets. Example: `/var/run/dropserver`. It should be empty and the user that runs `ds-host` should have read write and execute permissions.
 
-`sandbox.use-bubblewrap`: Causes `ds-host` to wrap its calls to Deno in a [Bubblewrap](https://github.com/containers/bubblewrap) sandbox. The `bwrap`` executable must be installed on the system and accessible to the Dropserver user.
+`sandbox.use-bubblewrap`: Causes `ds-host` to wrap its calls to Deno in a [Bubblewrap](https://github.com/containers/bubblewrap) sandbox. The `bwrap`` executable must be installed on the system and accessible to the Dropserver user. See [here for full details](/docs/bubblewrap).
 
 `sandbox.bwrap-map-paths`: Specify an array of paths to map such that Deno can run in the bubblewrap sandbox. Defaults to `["/usr/lib", "/etc", "/lib64"]`, which works for Arch. For Ubuntu also include `"/run"` and `"/lib"`. Note that you do not need to include the location of Deno itself, `ds-host` does that automatically.
 

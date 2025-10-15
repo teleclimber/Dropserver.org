@@ -11,13 +11,13 @@ import ValidVersion from '../../layouts/ValidVersion.vue';
 
 <ValidVersion from="0.10.0">Docs for older versions are [here](ds-host-0.9).</ValidVersion>
 
-`ds-host` is the full Dropserver and is intended to serve your appspaces in use. `ds-host` serves a user interface for administrators and users, as well as requests destined for appspaces. (see [Application Model](application-model) for a better understanding of this concept.) It can listen on ports 80 and 443 or it can sit behind a reverse proxy (see below). `ds-host` is Linux-only and must be run on x86 architecture (for now).
+`ds-host` is the full Dropserver and is intended to serve your appspaces in use. `ds-host` serves a user interface for administrators and users, as well as requests destined for appspaces. (see [Application Model](application-model) for a better understanding of this concept.) It can listen on ports 80 and 443 or it can sit behind a reverse proxy (see below).
 
 <Note>`ds-host` is for running a full instance of Dropserver. If you just want to run an app locally for development purposes, use [`ds-dev`](ds-dev).</Note>
 
 # Speedrun
 
-- On a Linux host, acquire the [latest version of ds-host](https://github.com/teleclimber/Dropserver/releases/) and [Deno](https://deno.land). Optionally install Bubblewrap "bwrap" from your package manager.
+- On a Linux host, acquire the [latest version of ds-host](https://github.com/teleclimber/Dropserver/releases/) and [Deno](https://deno.land).
 - Point a domain and its subdomains to your host.
 - Create `/srv/dropserver` and `/var/run/dropserver` with read/write permissions.
 - Create a `config.json` (see below).
@@ -44,19 +44,9 @@ And now, let's dive in.
 
 Obtain the latest release from the [Releases](https://github.com/teleclimber/Dropserver/releases) page and unzip. Place in `/usr/local/bin` or some other directory of your choice.
 
-### Install Dependencies
+### Install Deno
 
 You should have [Deno](https://deno.land) installed and available from wherever you'll be running `ds-host`.
-
-[Bubblewrap](https://github.com/containers/bubblewrap) is optional but recommended. It is used to wrap Deno in an additional sandbox based on Linux namespaces. Should a vulnerability be discovered in Deno, Bubblewrap should prevent an exploit from causing any harm. Of course an attacker will try to also find an exploit to get out of the Bubblewrap sandbox too, but two exploits are harder to find than one.
-
-<Note>The way `ds-host` uses `bwrap` currently is preliminary and not ideal. Further improvements to sandbox security can be expected down the road.</Note>
-
-Bubblewrap is available from package managers of most distros. `ds-host` should work with `bwrap` version 0.5 or higher.
-
-If you do not wish to use Bubblewrap set `sandbox.use-bubblewrap` to `false` in your config file. See below for more details.
-
-<Note>On more recent versions of Ubuntu, [apparmor conflicts with Bubblewrap](https://github.com/teleclimber/Dropserver/issues/139). See the links in the issue for workarounds, or turn off bubblewrap in the config, or use an older version of Ubuntu.</Note>
 
 ### Domain Name
 
@@ -186,32 +176,6 @@ You can also skip the whole TLS thing for local experimentation like this:
 }
 ```
 
-### Bubblewrap
-
-In the examples above we turned Bubblewrap off for the sake of simplicity. If you have Bublewrap (typically easily installed via your package manager) then you need to make a few changes to your config:
-
-```json
-{
-	...
-	"sandbox": {
-		"use-bubblewrap": true,
-		"bwrap-map-paths": ["..."]
-	}
-}
-```
-
-The `bwrap-map-paths` is the tricky bit. These are the paths from the host that must be mapped to the sandbox such that Deno can work. For Ubuntu, the following seems to work:
-
-```json
-"bwrap-map-paths": ["/lib", "/usr/lib", "/etc", "/lib64", "/run"]
-```
-
-For Arch, this works (and is the default value):
-
-```json
-"bwrap-map-paths": ["/usr/lib", "/etc", "/lib64"]
-```
-
 ### CGroups
 
 Regardless of the configuration you use from above, you can add cgroup control of sandbox resource usage.
@@ -237,6 +201,10 @@ The default config for cgroups looks like this:
 - `use-cgroups` set to false if you can not or do not want to deal with cgroups.
 - `cgroup-mount`: the location of your system's cgroups.
 - `memory-high-mb`: the `memory.high` value for the cgroup that contains all the sandbox cgroups, in megabytes.
+
+### Extra Sandboxing with Bubblewrap
+
+If you would like an additional layer of security you may want to try [using Bubblewrap](/docs/bubblewrap).
 
 ## Initial Run
 

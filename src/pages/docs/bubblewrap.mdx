@@ -1,0 +1,68 @@
+---
+title: "Bubblewrap - Dropserver Documentation"
+layout: ../../layouts/DocsPageLayout.astro
+---
+
+import Note from '../../layouts/Note.astro';
+import Warning from '../../layouts/Warning.astro';
+import ValidVersion from '../../layouts/ValidVersion.vue';
+
+# Use Bubblewrap as a Secondary Sandbox
+
+<ValidVersion from="0.10.0"></ValidVersion>
+
+Sandboxing apps is an important feature of Dropserver. The primary sandbox is Deno itself but if additional sandboxing is desired read on.
+
+[Bubblewrap](https://github.com/containers/bubblewrap) is used to wrap Deno in an additional sandbox based on Linux namespaces. Should a vulnerability be discovered in Deno, Bubblewrap should prevent an exploit from causing any harm. Of course an attacker will try to also find an exploit to get out of the Bubblewrap sandbox too, but two exploits are harder to find than one.
+
+Bubblewrap is available from package managers of most distros. `ds-host` should work with `bwrap` version 0.5 or higher.
+
+<Note>Bubblewrap is available on Linux only.</Note>
+
+If you do not wish to use Bubblewrap set `sandbox.use-bubblewrap` to `false` in your config file.
+
+Read about Dropserver's use of Bubblewrap in [this blog post](https://olivierforget.net/blog/2023/dropserver-sandbox/).
+
+### Bubblewrap is Prickly
+
+The way `bwrap` uses namespaces can sometimes make it challenging to run.
+
+On more recent versions of Ubuntu, [apparmor conflicts with Bubblewrap](https://github.com/teleclimber/Dropserver/issues/139). See the links in the issue for workarounds, or turn off bubblewrap in the config, or use an older version of Ubuntu.
+
+On Debian Bubblewrap has trouble running when `ds-host` is running via systemd.
+
+If you find yourself unable to get it working, fear not! Deno alone should provide sufficient sandboxing in most situations.
+
+### Insall Bubblewrap
+
+Install Bubblewrap "bwrap" from your distro's package manager.
+
+### Configuration
+
+In your `ds-host` config file set `sandbox.use-bubblewrap: true` and also set `sandbox.bwrap-map-paths`.
+
+```json
+{
+	...
+	"sandbox": {
+		"use-bubblewrap": true,
+		"bwrap-map-paths": ["..."]
+	}
+}
+```
+
+The `bwrap-map-paths` is the tricky bit. These are the paths from the host that must be mapped to the sandbox such that Deno can work. For Ubuntu, the following seems to work:
+
+```json
+"bwrap-map-paths": ["/lib", "/usr/lib", "/etc", "/lib64", "/run"]
+```
+
+For Arch, this works (and is the default value):
+
+```json
+"bwrap-map-paths": ["/usr/lib", "/etc", "/lib64"]
+```
+
+If everything works as expected you should be able to start `ds-host` and start a sandbox by using an appspace. If you get errors, try adjusting the `bwrap-map-paths`. You may also try running `ds-host` manually (not in systemd) to see if that changes things.
+
+Good luck, and if you figure out how to get past some of the challenges noted above, please report in the [issues](https://github.com/teleclimber/Dropserver/issues).
