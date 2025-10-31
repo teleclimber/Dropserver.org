@@ -1,5 +1,5 @@
 ---
-title: "ds-host - Dropserver Documentation"
+title: "Run ds-host on Linux - Dropserver Documentation"
 layout: ../../layouts/DocsPageLayout.astro
 ---
 
@@ -7,7 +7,7 @@ import Note from '../../layouts/Note.astro';
 import Warning from '../../layouts/Warning.astro';
 import ValidVersion from '../../layouts/ValidVersion.vue';
 
-# Run your own Dropserver with ds-host
+# Run your own Dropserver with ds-host on Linux
 
 <ValidVersion from="0.10.0">Docs for older versions are [here](ds-host-0.9).</ValidVersion>
 
@@ -17,8 +17,9 @@ import ValidVersion from '../../layouts/ValidVersion.vue';
 
 # Speedrun
 
-- On a Linux host, acquire the [latest version of ds-host](https://github.com/teleclimber/Dropserver/releases/) and [Deno](https://deno.land).
-- Point a domain and its subdomains to your host.
+- Download the [latest version of ds-host](https://github.com/teleclimber/Dropserver/releases/).
+- Install [Deno](https://deno.land).
+- Point a domain and its subdomains to your host or your reverse proxy.
 - Create `/srv/dropserver` and `/var/run/dropserver` with read/write permissions.
 - Create a `config.json` (see below).
 - Run `ds-host -config=/path/to/config.json -migrate`
@@ -30,7 +31,7 @@ import ValidVersion from '../../layouts/ValidVersion.vue';
 
 At this point a good chunk of `ds-host` is functional. You can install apps, create appspaces, migrate, add users, and use the appspace with other users. From experience it can run for months at a time without issues.
 
-However Dropserver is a big project run by one guy. There may be **security holes**! For the time being, don't use app code you don't trust and don't put it up on the public internet unless it's isolated in a VM and don't put data on there you can't afford to have stolen.
+However Dropserver is a big project built by one guy. There may be **security holes**! Please be mindful of potential risks, particularly if you expose `ds-host` to the internet.
 
 While we're setting expectations:
 
@@ -43,6 +44,8 @@ And now, let's dive in.
 # Install ds-host 
 
 Obtain the latest release from the [Releases](https://github.com/teleclimber/Dropserver/releases) page and unzip. Place in `/usr/local/bin` or some other directory of your choice.
+
+`ds-host` is available for x86-64 (Intel / AMD) and arm64 processors such as the Raspberry Pi.
 
 ### Install Deno
 

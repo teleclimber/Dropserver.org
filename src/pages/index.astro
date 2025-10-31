@@ -10,6 +10,14 @@ import HomePointBox from '../layouts/HomePointBox.astro';
 		padding: 0.2rem;
 		font-weight: bold;
 	}
+	.platforms {
+		text-align: center;
+		border: 1px solid #bbb;
+		padding: 0.5rem;
+	}
+	.platform a {
+		font-weight: bold;
+	}
 	.points-grid {
 		display: grid;
 		grid-template-columns: 1fr 1fr;
@@ -105,9 +113,19 @@ import HomePointBox from '../layouts/HomePointBox.astro';
 
 	<p class="cta">
 		Get the
-		<a href="https://github.com/teleclimber/Dropserver/releases">latest version (0.14.2 released October 22 2025)</a>
+		<a href="https://github.com/teleclimber/Dropserver/releases">
+			latest version (0.14.3 released October 31 2025)
+		</a>
 		and read the 
 		<a href="docs">docs to get started</a>.
+	</p>
+
+	<p class="platforms">
+		<strong>New:</strong>
+		Dropserver is now available on 
+		<a href="docs/ds-host">Linux</a>
+		and 
+		<a href="docs/ds-host-mac">MacOS</a>!
 	</p>
 
 	<h2>Why<span class="drop-ghosts">?</span></h2>

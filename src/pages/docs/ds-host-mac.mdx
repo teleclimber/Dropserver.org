@@ -1,0 +1,297 @@
+---
+title: "Run ds-host on MacOS - Dropserver Documentation"
+layout: ../../layouts/DocsPageLayout.astro
+---
+
+import Note from '../../layouts/Note.astro';
+import Warning from '../../layouts/Warning.astro';
+import ValidVersion from '../../layouts/ValidVersion.vue';
+
+# Run your own Dropserver with ds-host on MacOS
+
+<ValidVersion from="0.14.3"></ValidVersion>
+
+`ds-host` is the full Dropserver and is intended to serve your appspaces in use. `ds-host` serves a user interface for administrators and users, as well as requests destined for appspaces. (see [Application Model](application-model) for a better understanding of this concept.) It can listen on ports 80 and 443 or it can sit behind a reverse proxy (see below).
+
+<Note>`ds-host` is for running a full instance of Dropserver. If you just want to run an app locally for development purposes, use [`ds-dev`](ds-dev).</Note>
+
+# Speedrun
+
+- Download the [latest version of ds-host](https://github.com/teleclimber/Dropserver/releases/).
+- Install [Deno](https://deno.land).
+- Point a domain and its subdomains to your host or your reverse proxy.
+- Create `/Dropserver/data/` and `/Dropserver/sockets/` in your user directory
+- Create `config.json` file in the Dropserver directory (see below).
+- From the `Dropserver/` directory run `ds-host -config=config.json -migrate`
+- Start Dropserver by running `ds-host -config=config.json`
+- Look for `setup_key_reveal=` in the terminal output and use that URL to create an admin user.
+- Log in as your admin user and you're good to go.
+
+# Warning ⚠
+
+At this point a good chunk of `ds-host` is functional. You can install apps, create appspaces, migrate, add users, and use the appspace with other users. From experience it can run for months at a time without issues.
+
+However Dropserver is a big project built by one guy. There may be **security holes**! Please be mindful of potential risks, particularly if you expose `ds-host` to the internet.
+
+While we're setting expectations:
+
+- `ds-host` on MacOS works, but how to really **run it so it's safe is still experimental**
+- Some functionality is missing or half-baked
+- APIs that the apps use are going to change a few times before they become stable
+- The config file schema may change too
+
+And now, let's dive in.
+
+# Install ds-host 
+
+Obtain the latest release from the [Releases](https://github.com/teleclimber/Dropserver/releases) page and un-compress it (you can simply double-click it to expand it). 
+
+`ds-host` is available for x86-64 (Intel) and "M" series processors.
+
+Move `ds-host` to `/usr/local/bin`, or another directory of your choice.
+
+<Note>Your Mac may not allow `ds-host` to run at first. Try right-clicking on `ds-host` in the file manager and click "Open". Once you've done that it should run normally from the Terminal. If not, [check how to do it on your version of MacOS](https://support.apple.com/guide/mac-help/open-a-mac-app-from-an-unknown-developer-mh40616/26/mac/26).</Note>
+
+### Install Deno
+
+Follow the instructions at [Deno.land](https://deno.land) to install Deno.
+
+### Domain Name
+
+Dropserver makes use of subdomains to separate appspaces and the user administration site into different origins. For this reason you need to forward a domain and all its subdomains to your instance.
+
+One way to do this is by setting A and AAAA records for `@` and `*` (wildcard) to your instance IP.
+
+This can be a local domain name if you run your own DNS server, or a publicly registered domain name.
+
+### Create Directories
+
+In your Mac's user directory create a `Dropserver` directory, `/Users/YOURUSER/Dropserver` for example.
+
+We'll refer to this as the "Dropserver dir" from now on.
+
+Inside this Dropserver dir create the following directories:
+
+- `data`
+- `sockets`
+- `logs`
+
+# Configuration File
+
+Create a configuration file in the Dropserver dir, such as `/Users/YOURUSER/Dropserver/config.json`.
+
+Read below for configuration examples, and consult the [configuration variables](ds-host-config-ref) reference for more details.
+
+### With TLS Termination
+
+If you wish expose `ds-host` directly to the internet (not recommended) this configuration will work:
+
+```json
+{
+	"data-dir": "/Users/YOURUSER/Dropserver/data",
+	"server": {
+		"tls-port": 443,
+		"http-port": 80
+	},
+	"external-access": {
+		"subdomain": "dropid",
+		"domain": "example.com"
+	},
+	"manage-certificates": {
+		"enable": true,
+		"acme-account-email": "you@example.com"
+	},
+	"sandbox":{
+		"sockets-dir": "/Users/YOURUSER/Dropserver/sockets"
+	}
+}
+```
+
+In this case `ds-host` will use Let's Encrypt to generate certificates for each subdomain as needed, starting with `dropid.example.com`.
+
+<Note>Currently `ds-host` does not serve anything when loading the naked domain (example.com). To log in you will visit dropid.example.com (replacing example.com with your domain naturally).</Note>
+
+### Behind Reverse Proxy
+
+If you are running `ds-host` behind a reverse proxy listening on ports 80 and 443 with TLS termination (recommended) your config might look something like this:
+
+```json
+{
+	"data-dir": "/Users/YOURUSER/Dropserver/data",
+	"server": {
+		"http-port": 5050,
+		"no-tls": true
+	},
+	"external-access": {
+		"subdomain": "dropid",
+		"domain": "example.com"
+	},
+	"sandbox":{
+		"sockets-dir": "/Users/YOURUSER/Dropserver/sockets"
+	}
+}
+```
+
+In this case you can not use certificate management on ds-host. In this case it is best to obtain a wildcard certificate for the domain and configure your reverse proxy to use that.
+
+### Local Network
+
+If you are experimenting on a local network and you are using non-standard ports, you might try a configuration like this one:
+
+```json
+{
+	"data-dir": "/Users/YOURUSER/Dropserver/data",
+	"server": {
+		"tls-port": 5050,
+		"ssl-cert": "/path/to/ssl/example_com.crt",
+		"ssl-key": "/path/to/ssl/example_com.key"
+	},
+	"external-access": {
+		"domain": "example.com",
+		"subdomain": "dropid",
+		"port": 5050
+	},
+	"sandbox":{
+		"sockets-dir": "/Users/YOURUSER/Dropserver/sockets"
+	}
+}
+```
+
+With this configuration the site will be reachable at https://dropid.example.com:5050 (set your local DNS server accordingly). There would be no reverse proxy in this scenario, and `ds-host` does the TLS termination.
+
+### No TLS
+
+You can also skip the whole TLS thing for local experimentation like this:
+
+```json
+{
+	"data-dir": "/Users/YOURUSER/Dropserver/data",
+	"server": {
+		"http-port": 5050,
+		"no-tls": true
+	},
+	"external-access": {
+		"scheme": "http",
+		"domain": "example.com",
+		"subdomain": "dropid",
+		"port": 5050
+	},
+	"sandbox":{
+		"sockets-dir": "/Users/YOURUSER/Dropserver/sockets"
+	}
+}
+```
+
+## Initial Run
+
+Once you have a configuration file ready, initialize the DB. The `-migrate` flag will migrate the DB to the latest schema, creating a DB in the process if needed.
+
+From the `~/Dropserver/` directory run:
+
+```
+$ ds-host -config=~/Dropserver/config.json -migrate
+```
+
+Finally, you can start `ds-host` directly:
+
+```
+$ ds-host -config=~/Dropserver/config.json
+```
+
+## Run with Launchctl
+
+To make Dropserver available all the time, it should run as a [Daemon](https://developer.apple.com/library/archive/documentation/MacOSX/Conceptual/BPSystemStartup/Chapters/CreatingLaunchdJobs.html) on your Mac. For this you must write a `plist` file, then load and start it using `launchctl`.
+
+The example `plist` below should work well enough. Make sure to replace *YOURUSER* with your actual user name.
+
+Save it to `/Library/LaunchDaemons/`, with a name like `org.dropserver.ds-host.plist`. It should be owned by `root`.
+
+<Note>This `plist` has `ds-host` running as your user. This is likely OK if you aren't exposing it to the Internet and you are using apps you trust (apps are sandboxed and have no network access, but you never know). To be safer, you should create a separate user for it.</Note>
+
+```
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Label</key>
+    <string>org.dropserver.ds-host</string>
+
+    <key>ProgramArguments</key>
+    <array>
+        <string>/usr/local/bin/ds-host</string>
+        <string>-config=config.json</string>
+    </array>
+
+    <key>WorkingDirectory</key>
+    <string>/Users/YOURUSER/Dropserver/</string>
+
+    <key>EnvironmentVariables</key>
+    <dict>
+        <key>PATH</key>
+        <string>/Users/YOURUSER/.deno/bin</string>
+    </dict>
+
+    <key>StandardOutPath</key>
+    <string>logs/ds-host.stdout</string>
+
+    <key>StandardErrorPath</key>
+    <string>logs/ds-host.stderr</string>
+
+    <key>UserName</key>
+    <string>YOURUSER</string>
+
+    <key>RunAtLoad</key>
+    <true/>
+    <key>KeepAlive</key>
+    <true/>
+</dict>
+</plist>
+```
+
+After saving the `plist` it must be "loaded". From the terminal do:
+
+```
+sudo launchctl load /Library/LaunchDaemons/org.dropserver.ds-host.plist
+```
+
+Then start it. (It will start automatically when you boot your Mac, but we will manually start it this one time.)
+
+```
+sudo launchctl start org.dropserver.ds-host
+```
+
+The command will return nothing, but by printing the service status we can see if it's running:
+
+```
+sudo launchctl print system/org.dropserver.ds-host
+```
+
+Read the latest logs output by `ds-host` using using tail (assuming you're in the `Dropserver` dir):
+
+```
+tail logs/ds-host.stderr
+```
+
+The `plist` sets the `KeepAlive` property, so `ds-host` will be restarted whenever it is stopped, even if you stop it manually. To stop it for good, unload it:
+
+```
+sudo launchctl unload /Library/LaunchDaemons/org.dropserver.ds-host.plist
+```
+
+<Note>See this site for additional info on configuring daemons: [launchd.info](https://www.launchd.info)</Note>
+
+## Create the Admin User
+
+The first time you run `ds-host` the system will detect that there is no admin user and it will create a secret link where you can register as an admin. The link is printed in the log output. See the `tail` command above, or just open `logs/ds-host.stderr` in a text editor.
+
+Look for `setup_key_reveal=` and use the link to create an account.
+
+## Log In
+
+Now that `ds-host` is running and you created your admin user, some of the first things to do will be:
+
+- Create a dropid for yourself. A dropid is an id that can be a user of an appspace.
+- Add an app by uploading it manually. I recommend you go through the [app tutorial](build-dropserver-app-tutorial) to understand what goes into making apps.
+- Create an Appspace by choosing an app and a subdomain.
+
+Now that you have Dropserver running, have a look at how easy it is to make an app [here](build-dropserver-app-tutorial).
